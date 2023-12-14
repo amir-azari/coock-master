@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+    <!--Nav Host-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHost"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/navigation_main" />
+    <!--Bottom menu-->
+    <com.google.android.material.bottomappbar.BottomAppBar
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:fabAnimationMode="scale"
+        android:id="@+id/mainBottomAppbar"
+        app:fabCradleMargin="@dimen/_10mdp"
+        app:fabCradleRoundedCornerRadius="@dimen/_12mdp"
+        app:fabCradleVerticalOffset="@dimen/_10mdp"
+        >
+        
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/mainBottomNav"
+            android:layout_width="match_parent"
+            app:labelVisibilityMode="selected"
+            app:itemTextColor="@color/item_bottom_nav_tint"
+            app:itemIconTint="@color/item_bottom_nav_tint"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12mdp"
+            app:menu="@menu/menu_main" />
+
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+    <!--Menu-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainFabMenu"
+        app:tint="@color/black"
+        app:layout_anchor="@id/mainBottomAppbar"
+        android:src="@drawable/ic_restaurant"
+        app:backgroundTint="@color/yellowOrange"
+        android:contentDescription="@string/app_name" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
