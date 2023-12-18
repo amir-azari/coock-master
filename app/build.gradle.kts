@@ -62,9 +62,11 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.46.1")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     //Room components
-    implementation("androidx.room:room-runtime:2.5.2")
-    annotationProcessor("androidx.room:room-compiler:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     //Retrofit

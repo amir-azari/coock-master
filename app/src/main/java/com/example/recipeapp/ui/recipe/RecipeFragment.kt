@@ -17,6 +17,7 @@ import com.example.recipeapp.databinding.FragmentRecipeBinding
 import com.example.recipeapp.models.recipe.ResponseRecipes.Result
 import com.example.recipeapp.utils.Constants
 import com.example.recipeapp.utils.NetworkRequest
+import com.example.recipeapp.utils.onceObserve
 import com.example.recipeapp.utils.setupRecyclerView
 import com.example.recipeapp.utils.showSnackBar
 import com.example.recipeapp.viewmodel.RecipeViewModel
@@ -35,6 +36,7 @@ class RecipeFragment : Fragment() {
 
     @Inject
     lateinit var popularAdapter: PopularAdapter
+
     @Inject
     lateinit var recentAdapter: RecentAdapter
 
@@ -58,20 +60,36 @@ class RecipeFragment : Fragment() {
         binding.apply {
             //Show username
             lifecycleScope.launchWhenCreated { showUsername() }
-            //Call Api
-            recipeViewModel.callPopularApi(recipeViewModel.popularQueries())
-            recipeViewModel.callRecentApi(recipeViewModel.recentQueries())
+            //Call Data
+            callPopularData()
+            callRecentData()
+//
             //Load Data
             loadPopularData()
             loadRecentData()
-
-
 
 
         }
     }
 
     //---Popular---
+    private fun callPopularData() {
+        initPopularRecycler()
+        recipeViewModel.readPopularFromDb.observe(viewLifecycleOwner) { databse ->
+            if (databse.isNotEmpty()) {
+                databse[0].response.results?.let { results ->
+                    setupLoading(false, binding.popularList)
+
+                    popularAdapter.setData(results)
+                    atuScrollPopular(results)
+                }
+            } else {
+                recipeViewModel.callPopularApi(recipeViewModel.popularQueries())
+
+            }
+        }
+    }
+
     private fun loadPopularData() {
         binding.apply {
             recipeViewModel.popularData.observe(viewLifecycleOwner) { response ->
@@ -85,7 +103,6 @@ class RecipeFragment : Fragment() {
                         response.data?.let { data ->
                             if (data.results!!.isNotEmpty()) {
                                 popularAdapter.setData(data.results)
-                                initPopularRecycler()
                                 atuScrollPopular(data.results)
 
                             }
@@ -138,7 +155,23 @@ class RecipeFragment : Fragment() {
     }
     //---Recent--
 
-    private fun loadRecentData(){
+    private fun callRecentData(){
+        initRecentRecycler()
+        recipeViewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { databse ->
+            if (databse.isNotEmpty() && databse.size > 1) {
+                databse[1].response.results?.let { results ->
+                    setupLoading(false, binding.recipesList)
+                    recentAdapter.setData(results)
+
+                }
+
+            } else {
+                recipeViewModel.callRecentApi(recipeViewModel.recentQueries())
+            }
+        }
+    }
+
+    private fun loadRecentData() {
         binding.apply {
             recipeViewModel.recentData.observe(viewLifecycleOwner) { response ->
                 when (response) {
@@ -151,8 +184,6 @@ class RecipeFragment : Fragment() {
                         response.data?.let { data ->
                             if (data.results!!.isNotEmpty()) {
                                 recentAdapter.setData(data.results)
-                                initRecentRecycler()
-                                atuScrollPopular(data.results)
 
                             }
 
@@ -168,6 +199,7 @@ class RecipeFragment : Fragment() {
         }
 
     }
+
     private fun initRecentRecycler() {
 
         binding.recipesList.setupRecyclerView(

@@ -3,6 +3,10 @@ package com.example.recipeapp.utils
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -34,4 +38,14 @@ fun TextView.setDynamicallyColor(color: Int) {
     //Start - Left = 0 || Top = 1 || End - Right = 2 || Bottom = 3
     this.compoundDrawables[1].setTint(ContextCompat.getColor(context, color))
     this.setTextColor(ContextCompat.getColor(context, color))
+}
+
+fun <T> LiveData<T>.onceObserve(owner : LifecycleOwner , observer: Observer<T>){
+    observe(owner , object : Observer<T>{
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer.onChanged(value)
+        }
+
+    })
 }

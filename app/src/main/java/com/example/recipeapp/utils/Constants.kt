@@ -28,6 +28,10 @@ object Constants {
     const val REGISTER_USERNAME = "register_username"
     const val REGISTER_HASH = "register_hash"
 
+    //database
+    const val RECIPE_TABLE_NAME = "recipe_table_name"
+    const val DATABASE_NAME = "database_name"
+
     //Other
     const val OLD_IMAGE_SIZE = "312*231.jpg"
     const val NEW_IMAGE_SIZE = "636*393.jpg"
