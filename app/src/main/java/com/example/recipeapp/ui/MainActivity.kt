@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+        //Menu
+        binding.mainFabMenu.setOnClickListener {
+            navHost.navController.navigate(R.id.actionToMenu)
+        }
     }
 
     override fun onNavigateUp(): Boolean {

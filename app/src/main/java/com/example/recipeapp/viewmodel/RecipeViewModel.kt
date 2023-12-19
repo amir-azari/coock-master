@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.data.database.RecipeEntity
+import com.example.recipeapp.data.repository.MenuRepository
 import com.example.recipeapp.data.repository.RecipeRepository
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.utils.Constants
@@ -13,15 +14,18 @@ import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeViewModel @Inject constructor(private val repository: RecipeRepository) : ViewModel() {
+class RecipeViewModel @Inject constructor(
+    private val repository: RecipeRepository,
+    private val menuRepository: MenuRepository
+) : ViewModel() {
 
-
-    //---Popular---
+    //---Popular---//
     //Queries
     fun popularQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
@@ -40,9 +44,8 @@ class RecipeViewModel @Inject constructor(private val repository: RecipeReposito
         popularData.value = NetworkResponse(response).generalNetworkResponse()
         //Cache
         val cache = popularData.value?.data
-        if (cache != null) {
+        if (cache != null)
             offlinePopular(cache)
-        }
     }
 
     //Local
@@ -50,22 +53,29 @@ class RecipeViewModel @Inject constructor(private val repository: RecipeReposito
         repository.local.saveRecipes(entity)
     }
 
-    val readPopularFromDb: LiveData<List<RecipeEntity>> =
-        repository.local.loadRecipes().asLiveData()
+    val readPopularFromDb = repository.local.loadRecipes().asLiveData()
 
     private fun offlinePopular(response: ResponseRecipes) {
         val entity = RecipeEntity(0, response)
         savePopular(entity)
     }
 
-
-    //---Recent---
+    //---Recent---//
     //Queries
+    private var mealType = Constants.MAIN_COURSE
+    private var dietType = Constants.GLUTEN_FREE
+
     fun recentQueries(): HashMap<String, String> {
+        viewModelScope.launch {
+            menuRepository.readMenuData.collect {
+                mealType = it.meal
+                dietType = it.diet
+            }
+        }
         val queries: HashMap<String, String> = HashMap()
         queries[Constants.API_KEY] = Constants.MY_API_KEY
-        queries[Constants.TYPE] = Constants.MAIN_COURSE
-        queries[Constants.DIET] = Constants.GLUTEN_FREE
+        queries[Constants.TYPE] = mealType
+        queries[Constants.DIET] = dietType
         queries[Constants.NUMBER] = "50"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
@@ -73,9 +83,18 @@ class RecipeViewModel @Inject constructor(private val repository: RecipeReposito
 
     //Api
     val recentData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+    fun callRecentApi(queries: Map<String, String>) = viewModelScope.launch {
+        recentData.value = NetworkRequest.Loading()
+        val response = repository.remote.getRecipes(queries)
+        recentData.value = recentNetworkResponse(response)
+        //Cache
+        val cache = recentData.value?.data
+        if (cache != null)
+            offlineRecent(cache)
+    }
 
     //Local
-    fun saveRecent(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
+    private fun saveRecent(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.local.saveRecipes(entity)
     }
 
@@ -83,32 +102,20 @@ class RecipeViewModel @Inject constructor(private val repository: RecipeReposito
 
     private fun offlineRecent(response: ResponseRecipes) {
         val entity = RecipeEntity(1, response)
-        savePopular(entity)
-    }
-
-    fun callRecentApi(queries: Map<String, String>) = viewModelScope.launch {
-        recentData.value = NetworkRequest.Loading()
-        val response = repository.remote.getRecipes(queries)
-        recentData.value = recentNetworkResponse(response)
-        //Cache
-        val cache = recentData.value?.data
-        if (cache != null) {
-            offlineRecent(cache)
-        }
+        saveRecent(entity)
     }
 
     private fun recentNetworkResponse(response: Response<ResponseRecipes>): NetworkRequest<ResponseRecipes> {
         return when {
-            response.message().contains("timeout") -> NetworkRequest.Error("Time out")
-
-            response.code() == 401 -> NetworkRequest.Error("You ate not authorized")
-            response.code() == 402 -> NetworkRequest.Error("You free plan finished")
-            response.code() == 422 -> NetworkRequest.Error("Api key not found!!!")
-            response.code() == 500 -> NetworkRequest.Error("Try again!")
+            response.message().contains("timeout") -> NetworkRequest.Error("Timeout")
+            response.code() == 401 -> NetworkRequest.Error("You are not authorized")
+            response.code() == 402 -> NetworkRequest.Error("Your free plan finished")
+            response.code() == 422 -> NetworkRequest.Error("Api key not found!")
+            response.code() == 500 -> NetworkRequest.Error("Try again")
             response.body()!!.results.isNullOrEmpty() -> NetworkRequest.Error("Not found any recipe!")
             response.isSuccessful -> NetworkRequest.Success(response.body()!!)
             else -> NetworkRequest.Error(response.message())
         }
-
     }
+
 }

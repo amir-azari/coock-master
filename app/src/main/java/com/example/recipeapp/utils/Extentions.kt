@@ -40,12 +40,11 @@ fun TextView.setDynamicallyColor(color: Int) {
     this.setTextColor(ContextCompat.getColor(context, color))
 }
 
-fun <T> LiveData<T>.onceObserve(owner : LifecycleOwner , observer: Observer<T>){
-    observe(owner , object : Observer<T>{
-        override fun onChanged(value: T) {
+fun <T> LiveData<T>.onceObserve(owner: LifecycleOwner, observe: Observer<T>) {
+    observe(owner, object : Observer<T> {
+        override fun onChanged(t: T) {
             removeObserver(this)
-            observer.onChanged(value)
+            observe.onChanged(t)
         }
-
     })
 }

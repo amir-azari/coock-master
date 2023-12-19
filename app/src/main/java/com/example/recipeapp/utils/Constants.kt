@@ -24,9 +24,16 @@ object Constants {
 
 
     //Register datastore
+    const val MENU_DATASTORE = "menu_datastore"
     const val REGISTER_USER_INFO = "register_user_info"
     const val REGISTER_USERNAME = "register_username"
     const val REGISTER_HASH = "register_hash"
+
+    //MenuDataStore
+    const val MENU_MEAL_TITLE_KEY = "menu_meal_title_key"
+    const val MENU_MEAL_ID_KEY = "menu_meal_id_key"
+    const val MENU_DIET_TITLE_KEY = "menu_meal_title_key"
+    const val MENU_DIET_ID_KEY = "menu_meal_id_key"
 
     //database
     const val RECIPE_TABLE_NAME = "recipe_table_name"

@@ -20,4 +20,7 @@
     <string name="search">Search</string>
     <string name="lucky">Lucky</string>
     <string name="favorite">Favorite</string>
+    <string name="meal_types">Meal Types</string>
+    <string name="diets_type">Diet Type</string>
+    <string name="submit">SUBMIT</string>
 </resources>
