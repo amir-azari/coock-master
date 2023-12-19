@@ -53,12 +53,8 @@ class MenuFragment : BottomSheetDialogFragment() {
             //Fill chips
             setupChip(viewModel.mealsList(), mealChipGroup)
             setupChip(viewModel.dietsList(), dietChipGroup)
-            Log.d("Meal List" , viewModel.mealsList().toString())
-            Log.d("Meal List" , viewModel.dietsList().toString())
-
             //Read from menu stored data
             viewModel.readMenuStoredItems.asLiveData().onceObserve(viewLifecycleOwner) {
-
                 chipMealTitle = it.meal
                 chipDietTitle = it.diet
                 updateChip(it.mealId, mealChipGroup)
@@ -75,8 +71,6 @@ class MenuFragment : BottomSheetDialogFragment() {
                     chip = group.findViewById(it)
                     chipMealTitle = chip.text.toString().lowercase()
                     chipMealId = it
-
-
                 }
             }
             //Diet chips - click
@@ -86,15 +80,12 @@ class MenuFragment : BottomSheetDialogFragment() {
                     chip = group.findViewById(it)
                     chipDietTitle = chip.text.toString().lowercase()
                     chipDietId = it
-
                 }
             }
-
             //Submit
             submitBtn.setOnClickListener {
                 viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId)
                 findNavController().navigate(MenuFragmentDirections.actionMenuToRecipe().setIsUpdataData(true))
-
             }
         }
     }

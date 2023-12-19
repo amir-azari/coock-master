@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class MenuRepository @Inject constructor(@ApplicationContext private val context: Context) {
+
     private object StoredKey {
         val selectMealTitle = stringPreferencesKey(Constants.MENU_MEAL_TITLE_KEY)
         val selectMealId = intPreferencesKey(Constants.MENU_MEAL_ID_KEY)
@@ -37,6 +38,7 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
             it[StoredKey.selectDietId] = dietId
         }
     }
+
     val readMenuData: Flow<MenuStoredModel> = context.datastore.data
         .catch { e ->
             if (e is IOException) {
