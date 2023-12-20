@@ -23,4 +23,12 @@
     <string name="meal_types">Meal Types</string>
     <string name="diets_type">Diet Type</string>
     <string name="submit">SUBMIT</string>
+    <string name="showMore">Show more</string>
+    <string name="cheap">Cheap</string>
+    <string name="popular">Popular</string>
+    <string name="dairyFree">Dairy free</string>
+    <string name="instructions">Instructions</string>
+    <string name="steps">Steps</string>
+    <string name="diets">Diets</string>
+    <string name="similarRecipes">Similar recipes</string>
 </resources>

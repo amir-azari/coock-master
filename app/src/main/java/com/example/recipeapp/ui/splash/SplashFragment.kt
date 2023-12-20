@@ -31,19 +31,19 @@ class SplashFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentSplashBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
+        ): View {
+            _binding = FragmentSplashBinding.inflate(inflater, container, false)
+            return binding.root
+        }
 
-    @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //InitView
-        binding.apply {
+            @SuppressLint("SetTextI18n")
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                //InitView
+                binding.apply {
             //Dynamically background
             bgImg.load(R.drawable.bg_splash)
             //Application version
