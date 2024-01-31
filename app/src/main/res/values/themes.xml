@@ -41,6 +41,7 @@
         <item name="android:clickable">false</item>
         <item name="android:checkable">false</item>
     </style>
+
     <style name="Theme.RecipeApp" parent="Base.Theme.RecipeApp" />
     <!--Progressbar-->
     <style name="YellowProgressbar">

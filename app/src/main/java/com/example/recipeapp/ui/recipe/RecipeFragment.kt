@@ -2,12 +2,14 @@ package com.example.recipeapp.ui.recipe
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -113,8 +115,8 @@ class RecipeFragment : Fragment() {
         snapHelper.attachToRecyclerView(binding.popularList)
         //Click
         popularAdapter.setOnItemClickListener {
-            //TODO
-        }
+            val action = RecipeFragmentDirections.actionToDetail(it)
+            findNavController().navigate(action)        }
     }
 
     private fun autoScrollPopular(list: List<Result>) {
@@ -182,7 +184,10 @@ class RecipeFragment : Fragment() {
 
         //Click
         recentAdapter.setOnItemClickListener {
-            //TODO
+            val action = RecipeFragmentDirections.actionToDetail(it)
+            findNavController().navigate(action)
+            Log.d("checkIdSimilar" , it.toString())
+
         }
     }
 

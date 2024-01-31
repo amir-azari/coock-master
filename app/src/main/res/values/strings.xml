@@ -31,4 +31,6 @@
     <string name="steps">Steps</string>
     <string name="diets">Diets</string>
     <string name="similarRecipes">Similar recipes</string>
+    <string name="items">Items</string>
+    <string name="source">Source</string>
 </resources>
