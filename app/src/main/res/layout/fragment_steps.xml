@@ -17,7 +17,7 @@
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_10font_mdp"
         app:drawableStartCompat="@drawable/ic_bowl_chopsticks_noodles"
-        app:drawableTint="@color/yellowOrange"
+        app:drawableTint="@color/jacarta"
         app:fontPath="fonts/atlas_bold.ttf"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

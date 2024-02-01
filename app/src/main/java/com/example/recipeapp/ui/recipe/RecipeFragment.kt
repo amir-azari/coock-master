@@ -138,7 +138,7 @@ class RecipeFragment : Fragment() {
     private fun callRecentData() {
         initRecentRecycler()
         recipeViewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
-            if (database.isNotEmpty() && database.size > 1 && !args.isUpdataData) {
+            if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
                 database[1].response.results?.let { result ->
                     setupLoading(false, binding.recipesList)
                     recentAdapter.setData(result)

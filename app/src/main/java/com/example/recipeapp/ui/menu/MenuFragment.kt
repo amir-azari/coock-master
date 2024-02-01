@@ -85,7 +85,7 @@ class MenuFragment : BottomSheetDialogFragment() {
             //Submit
             submitBtn.setOnClickListener {
                 viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId)
-                findNavController().navigate(MenuFragmentDirections.actionMenuToRecipe().setIsUpdataData(true))
+                findNavController().navigate(MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true))
             }
         }
     }

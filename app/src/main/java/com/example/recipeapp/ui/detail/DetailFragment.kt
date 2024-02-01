@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -40,7 +41,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     //Binding
@@ -160,13 +160,13 @@ class DetailFragment : Fragment() {
                 error(R.drawable.ic_placeholder)
             }
             //Source
-//            data.sourceUrl?.let { source ->
-//                sourceImg.isVisible = true
-//                sourceImg.setOnClickListener {
-//                    val direction = DetailFragmentDirections.actionToWebView(source)
-//                    findNavController().navigate(direction)
-//                }
-//            }
+            data.sourceUrl?.let { source ->
+                sourceImg.isVisible = true
+                sourceImg.setOnClickListener {
+                    val direction = DetailFragmentDirections.actionToWebView(source)
+                    findNavController().navigate(direction)
+                }
+            }
             //Text
             timeTxt.text = data.readyInMinutes!!.minToHour()
             nameTxt.text = data.title
@@ -195,11 +195,11 @@ class DetailFragment : Fragment() {
             instructionsDesc.text = instructions
             initInstructionsList(data.extendedIngredients.toMutableList())
             //Steps
-//            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
-//            stepsShowMore.setOnClickListener {
-//                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
-//                findNavController().navigate(direction)
-//            }
+            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
+            stepsShowMore.setOnClickListener {
+                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
+                findNavController().navigate(direction)
+            }
             //Diets
             setupChip(data.diets!!.toMutableList(), dietsChipGroup)
         }
