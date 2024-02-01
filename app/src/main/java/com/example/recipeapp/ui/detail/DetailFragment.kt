@@ -21,6 +21,7 @@ import com.example.recipeapp.R
 import com.example.recipeapp.adapter.InstructionsAdapter
 import com.example.recipeapp.adapter.SimilarAdapter
 import com.example.recipeapp.adapter.StepsAdapter
+import com.example.recipeapp.data.database.entity.FavoriteEntity
 import com.example.recipeapp.databinding.FragmentDetailBinding
 import com.example.recipeapp.models.detail.ResponseDetail
 import com.example.recipeapp.models.detail.ResponseSimilar
@@ -31,6 +32,7 @@ import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.isVisible
 import com.example.recipeapp.utils.minToHour
 import com.example.recipeapp.utils.setDynamicallyColor
+import com.example.recipeapp.utils.setTint
 import com.example.recipeapp.utils.setupRecyclerView
 import com.example.recipeapp.utils.showSnackBar
 import com.example.recipeapp.viewmodel.DetailViewModel
@@ -148,8 +150,15 @@ class DetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initViewsWithData(data: ResponseDetail) {
-        binding.apply {
 
+        binding.apply {
+            //Favorite
+            viewModel.existsFavorite(data.id!!)
+            checkExistsFavorite()
+            //Click favorites
+            favoriteImg.setOnClickListener {
+                if (isExistsFavorite) deleteFavorite(data) else saveFavorite(data)
+            }
             //Image
             val imageSplit = data.image!!.split("-")
             val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
@@ -281,6 +290,42 @@ class DetailFragment : Fragment() {
 
     private fun initInternetLayout(isConnected: Boolean) {
         binding.internetLay.isVisible = isConnected.not()
+    }
+
+    //Favorite
+    private fun saveFavorite(data: ResponseDetail) {
+        val entity = FavoriteEntity(data.id!!, data)
+        viewModel.saveFavorite(entity)
+        binding.favoriteImg.apply {
+            setTint(R.color.tart_orange)
+            setImageResource(R.drawable.ic_heart_circle_minus)
+        }
+    }
+
+    private fun deleteFavorite(data: ResponseDetail) {
+        val entity = FavoriteEntity(data.id!!, data)
+        viewModel.deleteFavorite(entity)
+        binding.favoriteImg.apply {
+            setTint(R.color.persianGreen)
+            setImageResource(R.drawable.ic_heart_circle_plus)
+        }
+    }
+
+    private fun checkExistsFavorite() {
+        viewModel.existsFavoriteData.observe(viewLifecycleOwner) {
+            isExistsFavorite = it
+            if (it) {
+                binding.favoriteImg.apply {
+                    setTint(R.color.tart_orange)
+                    setImageResource(R.drawable.ic_heart_circle_minus)
+                }
+            } else {
+                binding.favoriteImg.apply {
+                    setTint(R.color.persianGreen)
+                    setImageResource(R.drawable.ic_heart_circle_plus)
+                }
+            }
+        }
     }
 
 
