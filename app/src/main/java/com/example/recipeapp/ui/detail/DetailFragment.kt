@@ -1,16 +1,16 @@
 package com.example.recipeapp.ui.detail
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.annotation.SuppressLint
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +22,10 @@ import com.example.recipeapp.adapter.SimilarAdapter
 import com.example.recipeapp.adapter.StepsAdapter
 import com.example.recipeapp.databinding.FragmentDetailBinding
 import com.example.recipeapp.models.detail.ResponseDetail
-import com.example.recipeapp.models.detail.ResponseDetail.*
-import com.example.recipeapp.models.detail.ResponseDetail.AnalyzedInstruction.*
 import com.example.recipeapp.models.detail.ResponseSimilar
 import com.example.recipeapp.ui.recipe.RecipeFragmentDirections
 import com.example.recipeapp.utils.Constants
+import com.example.recipeapp.utils.NetworkChecker
 import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.isVisible
 import com.example.recipeapp.utils.minToHour
@@ -38,12 +37,13 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
-
-    // Binding
+    //Binding
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
@@ -56,40 +56,51 @@ class DetailFragment : Fragment() {
     @Inject
     lateinit var similarAdapter: SimilarAdapter
 
+    @Inject
+    lateinit var networkChecker: NetworkChecker
+
     //Other
     private val viewModel: DetailViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
     private var recipeId = 0
+    private var isExistsCache = false
+    private var isExistsFavorite = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentDetailBinding.inflate(layoutInflater)
         return binding.root
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //args
+        //Args
         args.let {
             recipeId = args.recipeID
-            //Call Api
-            if (recipeId > 0) {
-                viewModel.callDetailApi(recipeId, Constants.MY_API_KEY)
-                viewModel.callSimilarApi(recipeId, Constants.MY_API_KEY)
-            }
+            //Call api
+            if (recipeId > 0)
+                checkExistsDetailInCache(recipeId)
         }
-        //InitView
+        //InitViews
         binding.apply {
             //Back
             backImg.setOnClickListener { findNavController().popBackStack() }
-
         }
-        loadDetailDataFromApi()
-        loadSimilarDataFromApi()
+        //Check Internet
+        lifecycleScope.launchWhenStarted {
+            networkChecker.checkNetworkAvailability().collect { state ->
+                delay(200)
+                if (isExistsCache.not()) {
+                    initInternetLayout(state)
+                    if (state) {
+                        loadDetailDataFromApi()
+                    }
+                }
+                //Similar
+                if (state)
+                    viewModel.callSimilarApi(recipeId, Constants.MY_API_KEY)
+            }
+        }
 
     }
 
@@ -101,15 +112,12 @@ class DetailFragment : Fragment() {
                     is NetworkRequest.Loading -> {
                         loading.isVisible(true, contentLay)
                     }
-
                     is NetworkRequest.Success -> {
                         loading.isVisible(false, contentLay)
                         response.data?.let { data ->
                             initViewsWithData(data)
-
                         }
                     }
-
                     is NetworkRequest.Error -> {
                         loading.isVisible(false, contentLay)
                         binding.root.showSnackBar(response.message!!)
@@ -119,45 +127,32 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun loadSimilarDataFromApi() {
-        viewModel.callDetailApi(recipeId, Constants.MY_API_KEY)
-        binding.apply {
-            viewModel.similarData.observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is NetworkRequest.Loading -> {
-                        similarList.showShimmer()
-                    }
-
-                    is NetworkRequest.Success -> {
-                        similarList.hideShimmer()
-                        response.data?.let { data ->
-                            initSimilarWithData(data)
-
-                        }
-                    }
-
-                    is NetworkRequest.Error -> {
-                        similarList.hideShimmer()
-                        binding.root.showSnackBar(response.message!!)
-                    }
-                }
+    private fun checkExistsDetailInCache(id: Int) {
+        viewModel.existsDetail(id)
+        //Load
+        viewModel.existsDetailData.observe(viewLifecycleOwner) {
+            isExistsCache = it
+            if (it) {
+                loadDetailDataFromDb()
+                loadSimilarData()
+                binding.contentLay.isVisible = true
             }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun loadDetailDataFromDb() {
+        viewModel.readDetailFromDb(recipeId).observe(viewLifecycleOwner) {
+            initViewsWithData(it.result)
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun initViewsWithData(data: ResponseDetail) {
-
         binding.apply {
+
             //Image
             val imageSplit = data.image!!.split("-")
-            val imageSize =
-                imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
+            val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
             coverImg.load("${imageSplit[0]}-$imageSize") {
                 crossfade(true)
                 crossfade(800)
@@ -165,19 +160,19 @@ class DetailFragment : Fragment() {
                 error(R.drawable.ic_placeholder)
             }
             //Source
-            data.sourceUrl?.let { source ->
-                sourceImg.isVisible = true
-                sourceImg.setOnClickListener {
-                    val direction = DetailFragmentDirections.actionToWebView(source)
-                    findNavController().navigate(direction)
-                }
-            }
+//            data.sourceUrl?.let { source ->
+//                sourceImg.isVisible = true
+//                sourceImg.setOnClickListener {
+//                    val direction = DetailFragmentDirections.actionToWebView(source)
+//                    findNavController().navigate(direction)
+//                }
+//            }
             //Text
             timeTxt.text = data.readyInMinutes!!.minToHour()
             nameTxt.text = data.title
             //Desc
-            val summery = HtmlCompat.fromHtml(data.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
-            descTxt.text = summery
+            val summary = HtmlCompat.fromHtml(data.summary!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            descTxt.text = summary
             //Toggle
             if (data.cheap!!) cheapTxt.setDynamicallyColor(R.color.caribbean_green)
             if (data.veryPopular!!) popularTxt.setDynamicallyColor(R.color.tart_orange)
@@ -195,37 +190,22 @@ class DetailFragment : Fragment() {
                 in 0..59 -> healthyTxt.setDynamicallyColor(R.color.tart_orange)
             }
             //Instructions
-            instructionsCount.text =
-                "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
-            val instructions =
-                HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            instructionsCount.text = "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
+            val instructions = HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
             instructionsDesc.text = instructions
             initInstructionsList(data.extendedIngredients.toMutableList())
             //Steps
-            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
-            stepsShowMore.setOnClickListener {
-                val direction =
-                    DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
-                findNavController().navigate(direction)
-            }
+//            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
+//            stepsShowMore.setOnClickListener {
+//                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
+//                findNavController().navigate(direction)
+//            }
             //Diets
             setupChip(data.diets!!.toMutableList(), dietsChipGroup)
         }
     }
 
-    private fun setupChip(list: MutableList<String>, view: ChipGroup) {
-        list.forEach {
-            val chip = Chip(requireContext())
-            val drawable =
-                ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.DietsChip)
-            chip.setChipDrawable(drawable)
-            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGray))
-            chip.text = it
-            view.addView(chip)
-        }
-    }
-
-    private fun initInstructionsList(list: MutableList<ExtendedIngredient>) {
+    private fun initInstructionsList(list: MutableList<ResponseDetail.ExtendedIngredient>) {
         if (list.isNotEmpty()) {
             instructionsAdapter.setData(list)
             binding.instructionsList.setupRecyclerView(
@@ -235,7 +215,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun initStepsList(list: MutableList<Step>) {
+    private fun initStepsList(list: MutableList<ResponseDetail.AnalyzedInstruction.Step>) {
         if (list.isNotEmpty()) {
             Constants.STEPS_COUNT = if (list.size < 3) {
                 list.size
@@ -253,7 +233,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun initSimilarWithData(list: MutableList<ResponseSimilar.ResponseSimilarItem>) {
+    private fun initSimilarData(list: MutableList<ResponseSimilar.ResponseSimilarItem>) {
         similarAdapter.setData(list)
         binding.similarList.setupRecyclerView(
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false),
@@ -263,10 +243,50 @@ class DetailFragment : Fragment() {
         similarAdapter.setOnItemClickListener {
             val action = RecipeFragmentDirections.actionToDetail(it)
             findNavController().navigate(action)
-            Log.d("checkIdSimilar" , it.toString())
         }
+    }
 
+    private fun loadSimilarData() {
+        binding.apply {
+            viewModel.similarData.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is NetworkRequest.Loading -> {
+                        similarList.showShimmer()
+                    }
+                    is NetworkRequest.Success -> {
+                        similarList.hideShimmer()
+                        response.data?.let { data ->
+                            initSimilarData(data)
+                        }
+                    }
+                    is NetworkRequest.Error -> {
+                        similarList.hideShimmer()
+                        binding.root.showSnackBar(response.message!!)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupChip(list: MutableList<String>, view: ChipGroup) {
+        list.forEach {
+            val chip = Chip(requireContext())
+            val drawable = ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.DietsChip)
+            chip.setChipDrawable(drawable)
+            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGray))
+            chip.text = it
+            view.addView(chip)
+        }
+    }
+
+    private fun initInternetLayout(isConnected: Boolean) {
+        binding.internetLay.isVisible = isConnected.not()
     }
 
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

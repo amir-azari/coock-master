@@ -2,7 +2,6 @@ package com.example.recipeapp.ui.recipe
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -115,8 +114,8 @@ class RecipeFragment : Fragment() {
         snapHelper.attachToRecyclerView(binding.popularList)
         //Click
         popularAdapter.setOnItemClickListener {
-            val action = RecipeFragmentDirections.actionToDetail(it)
-            findNavController().navigate(action)        }
+            gotoDetailPage(it)
+        }
     }
 
     private fun autoScrollPopular(list: List<Result>) {
@@ -184,10 +183,7 @@ class RecipeFragment : Fragment() {
 
         //Click
         recentAdapter.setOnItemClickListener {
-            val action = RecipeFragmentDirections.actionToDetail(it)
-            findNavController().navigate(action)
-            Log.d("checkIdSimilar" , it.toString())
-
+            gotoDetailPage(it)
         }
     }
 
@@ -214,6 +210,10 @@ class RecipeFragment : Fragment() {
 
     private fun gttEmojiByUnicode(): String {
         return String(Character.toChars(0x1f44b))
+    }
+    private fun gotoDetailPage(id: Int) {
+        val action = RecipeFragmentDirections.actionToDetail(id)
+        findNavController().navigate(action)
     }
 
     override fun onDestroy() {

@@ -1,13 +1,17 @@
 package com.example.recipeapp.data.source
 
 import com.example.recipeapp.data.database.RecipeAppDao
-import com.example.recipeapp.data.database.RecipeEntity
-import kotlinx.coroutines.flow.Flow
+import com.example.recipeapp.data.database.entity.DetailEntity
+import com.example.recipeapp.data.database.entity.RecipeEntity
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val dao: RecipeAppDao) {
-
     //Recipes
     suspend fun saveRecipes(entity: RecipeEntity) = dao.saveRecipes(entity)
     fun loadRecipes() = dao.loadRecipes()
+
+    //Detail
+    suspend fun saveDetail(entity: DetailEntity) = dao.saveDetail(entity)
+    fun loadDetail(id: Int) = dao.loadDetail(id)
+    fun existsDetail(id: Int) = dao.existsDetail(id)
 }

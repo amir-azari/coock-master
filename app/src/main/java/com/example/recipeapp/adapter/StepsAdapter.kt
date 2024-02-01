@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.databinding.ItemStepBinding
-import com.example.recipeapp.models.detail.ResponseDetail.AnalyzedInstruction.*
+import com.example.recipeapp.models.detail.ResponseDetail.AnalyzedInstruction.Step
 import com.example.recipeapp.utils.BaseDiffUtils
 import com.example.recipeapp.utils.Constants
 import com.example.recipeapp.utils.minToHour

@@ -2,13 +2,16 @@ package com.example.recipeapp.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.data.database.entity.DetailEntity
 import com.example.recipeapp.data.repository.RecipeRepository
 import com.example.recipeapp.models.detail.ResponseDetail
 import com.example.recipeapp.models.detail.ResponseSimilar
 import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +24,28 @@ class DetailViewModel @Inject constructor(private val repository: RecipeReposito
         val response = repository.remote.getDetail(id, apiKey)
         detailData.value = NetworkResponse(response).generalNetworkResponse()
         //Cache
-
+        val cache = detailData.value?.data
+        if (cache != null)
+            cacheDetail(cache.id!!, cache)
     }
+
+    //Local
+    private fun saveDetail(entity: DetailEntity) = viewModelScope.launch {
+        repository.local.saveDetail(entity)
+    }
+
+    fun readDetailFromDb(id: Int) = repository.local.loadDetail(id).asLiveData()
+
+    val existsDetailData = MutableLiveData<Boolean>()
+    fun existsDetail(id: Int) = viewModelScope.launch {
+        repository.local.existsDetail(id).collect { existsDetailData.postValue(it) }
+    }
+
+    private fun cacheDetail(id: Int, response: ResponseDetail) {
+        val entity = DetailEntity(id, response)
+        saveDetail(entity)
+    }
+
     //Similar
     val similarData = MutableLiveData<NetworkRequest<ResponseSimilar>>()
     fun callSimilarApi(id: Int, apiKey: String) = viewModelScope.launch {

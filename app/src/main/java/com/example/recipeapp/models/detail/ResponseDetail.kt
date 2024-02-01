@@ -1,9 +1,7 @@
 package com.example.recipeapp.models.detail
 
-
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
@@ -60,8 +58,6 @@ data class ResponseDetail(
     val sourceName: String?, // Pink When
     @SerializedName("sourceUrl")
     val sourceUrl: String?, // https://www.pinkwhen.com/oreo-cookie-balls-thanksgiving-turkey/
-    @SerializedName("spoonacularScore")
-    val spoonacularScore: Double?, // 91.04034423828125
     @SerializedName("spoonacularSourceUrl")
     val spoonacularSourceUrl: String?, // https://spoonacular.com/how-to-make-oreo-turkeys-for-thanksgiving-715449
     @SerializedName("summary")
@@ -89,7 +85,7 @@ data class ResponseDetail(
         val name: String?,
         @SerializedName("steps")
         val steps: @RawValue List<Step>?
-    ): Parcelable {
+    ) : Parcelable {
         data class Step(
             @SerializedName("equipment")
             val equipment: List<Equipment?>?,
@@ -189,29 +185,29 @@ data class ResponseDetail(
         @SerializedName("pairedWines")
         val pairedWines: List<String?>?,
         @SerializedName("pairingText")
-        val pairingText: String?, // Cream Sherry, Madeira, and Prosecco are my top picks for Oreo Cookies. A common wine pairing rule is to make sure your wine is sweeter than your food. Delicate desserts go well with Moscato d'Asti, nutty desserts with cream sherry, and caramel or chocolate desserts pair well with port. One wine you could try is NV Solera Cream Sherry. It has 4.5 out of 5 stars and a bottle costs about 17 dollars.
+        val pairingText: String?, // Oreo Cookies can be paired with Wine, Alcoholic Drink, and Ingredient. A common wine pairing rule is to make sure your wine is sweeter than your food. Delicate desserts go well with Moscato d'Asti, nutty desserts with cream sherry, and caramel or chocolate desserts pair well with port. The Honig Reserve Sauvignon Blanc Rutherford with a 4.7 out of 5 star rating seems like a good match. It costs about 33 dollars per bottle.
         @SerializedName("productMatches")
         val productMatches: List<ProductMatche?>?
     ) {
         data class ProductMatche(
             @SerializedName("averageRating")
-            val averageRating: Double?, // 0.8999999761581421
+            val averageRating: Double?, // 0.9400000000000001
             @SerializedName("description")
-            val description: String?, // The Solera Cream Sherry has a brilliant amber and deep copper hue. With butterscotch and pecan aromas, the sweet salted nut and brown spice aromas carry a complex caramel accent. A sweet entry leads to a rounded, lush, moderately full-bodied palate with a lengthy, flavorful finish.
+            val description: String?,
             @SerializedName("id")
-            val id: Int?, // 428475
+            val id: Int?, // 3490730
             @SerializedName("imageUrl")
-            val imageUrl: String?, // https://spoonacular.com/productImages/428475-312x231.jpg
+            val imageUrl: String?, // https://spoonacular.com/productImages/3490730-312x231.jpg
             @SerializedName("link")
-            val link: String?, // https://www.amazon.com/NV-Solera-Cream-Sherry-750/dp/B00HSME8OW?tag=spoonacular-20
+            val link: String?, // https://click.linksynergy.com/deeplink?id=*QCiIS6t4gA&mid=2025&murl=https%3A%2F%2Fwww.wine.com%2Fproduct%2Fhonig-reserve-sauvignon-blanc-rutherford-2021%2F1098373
             @SerializedName("price")
-            val price: String?, // $16.989999771118164
+            val price: String?, // $32.99
             @SerializedName("ratingCount")
-            val ratingCount: Double?, // 4.0
+            val ratingCount: Double?, // 5.0
             @SerializedName("score")
-            val score: Double?, // 0.8230768992350652
+            val score: Double?, // 0.8775000000000001
             @SerializedName("title")
-            val title: String? // NV Solera Cream Sherry
+            val title: String? // Honig Reserve Sauvignon Blanc Rutherford
         )
     }
 }

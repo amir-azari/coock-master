@@ -34,7 +34,15 @@ fun Int.minToHour(): String {
     time = if (hours > 0) "${hours}h:${minutes}min" else "${minutes}min"
     return time
 }
-
+fun View.isVisible(isShownLoading: Boolean, container: View) {
+    if (isShownLoading) {
+        this.isVisible = true
+        container.isVisible = false
+    } else {
+        this.isVisible = false
+        container.isVisible = true
+    }
+}
 fun TextView.setDynamicallyColor(color: Int) {
     //Start - Left = 0 || Top = 1 || End - Right = 2 || Bottom = 3
     this.compoundDrawables[1].setTint(ContextCompat.getColor(context, color))

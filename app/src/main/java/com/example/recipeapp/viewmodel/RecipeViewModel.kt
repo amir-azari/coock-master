@@ -1,11 +1,10 @@
 package com.example.recipeapp.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.recipeapp.data.database.RecipeEntity
+import com.example.recipeapp.data.database.entity.RecipeEntity
 import com.example.recipeapp.data.repository.MenuRepository
 import com.example.recipeapp.data.repository.RecipeRepository
 import com.example.recipeapp.models.recipe.ResponseRecipes
@@ -14,7 +13,6 @@ import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
