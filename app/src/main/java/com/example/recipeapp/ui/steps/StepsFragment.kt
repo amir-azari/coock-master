@@ -38,6 +38,9 @@ class StepsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         //InitViews
         binding.apply {
+            closestBtn.setOnClickListener {
+                dismiss()
+            }
             //Args
             args.let {
                 steps = it.data.steps!!.toMutableList()

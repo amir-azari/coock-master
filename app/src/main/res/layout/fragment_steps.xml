@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.steps.StepsFragment">
+
+    <ImageView
+        android:id="@+id/closestBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_close_24"
+        android:layout_marginEnd="@dimen/_13mdp"
+        app:layout_constraintBottom_toBottomOf="@+id/stepsTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/stepsTitle" />
     <!--Steps-->
     <TextView
         android:id="@+id/stepsTitle"
@@ -26,8 +36,12 @@
         android:id="@+id/stepsList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_goneMarginTop="@dimen/_5mdp"
+        android:paddingTop="@dimen/_10mdp"
+        android:paddingBottom="@dimen/_30mdp"
         android:layout_marginTop="@dimen/_10mdp"
         android:layout_marginEnd="@dimen/_10mdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/stepsTitle"
         app:layout_constraintTop_toBottomOf="@id/stepsTitle"

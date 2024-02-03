@@ -45,7 +45,9 @@ class NetworkChecker @Inject constructor(
         }
         return isNetworkAvailable
     }
-
+    fun unregisterNetworkCallback() {
+        connectivityManager.unregisterNetworkCallback(this)
+    }
     override fun onAvailable(network: Network) {
         isNetworkAvailable.value = true
     }

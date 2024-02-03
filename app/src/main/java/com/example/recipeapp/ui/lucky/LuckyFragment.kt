@@ -132,7 +132,8 @@ class LuckyFragment : Fragment() {
             //Like
             likeTxt.text = data.aggregateLikes.toString()
             //price
-            priceTxt.text = "${data.pricePerServing} $"
+            val price = "%.2f".format(data.pricePerServing!!.div(100))
+            priceTxt.text = "$price $"
             //Healthy
             healthyTxt.text = data.healthScore.toString()
             when (data.healthScore) {

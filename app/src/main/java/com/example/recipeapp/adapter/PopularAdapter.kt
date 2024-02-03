@@ -55,7 +55,8 @@ class PopularAdapter @Inject constructor(): RecyclerView.Adapter<PopularAdapter.
             binding.apply {
                 //text
                 popularNameTxt.text = item.title
-                popularPriceTxt.text = "${item.pricePerServing} $"
+                val price = "%.2f".format(item.pricePerServing!!.div(100))
+                popularPriceTxt.text = "$price $"
                 //Image
                 val imageSplit = item.image!!.split("-")
                 val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE,Constants.NEW_IMAGE_SIZE)
