@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationView"
+        android:id="@+id/emptyView"
         android:layout_width="@dimen/_200mdp"
         android:layout_height="@dimen/_200mdp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
-        app:lottie_rawRes="@raw/no_connection"
+        app:lottie_rawRes="@raw/empty"
         app:lottie_speed="1.5" />
 
     <!--Text-->
@@ -23,13 +23,14 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/check_your_connection"
+        android:layout_marginTop="200dp"
+        android:text="@string/emptyList"
         android:textColor="@color/black"
         android:textSize="@dimen/_18font_mdp"
         app:fontPath="fonts/atlas_bold.ttf"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animationView" />
+        app:layout_constraintTop_toTopOf="@+id/emptyView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
