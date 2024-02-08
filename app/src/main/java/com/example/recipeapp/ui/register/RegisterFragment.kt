@@ -59,8 +59,7 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            coverImg.load(R.drawable.register_logo)
-            bgImg.load(R.drawable.bg_splash)
+            bgImg.load(R.drawable.login_bg)
 
             // Set up text watchers
 
