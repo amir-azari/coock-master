@@ -1,6 +1,7 @@
 package com.example.recipeapp.ui.register
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +44,6 @@ class RegisterFragment : Fragment() {
     private val viewModel: RegisterViewModel by viewModels()
 
     // Other
-    private var email: String = ""
     private var username: String = ""
 
     override fun onCreateView(
@@ -63,8 +63,11 @@ class RegisterFragment : Fragment() {
             bgImg.load(R.drawable.bg_splash)
 
             // Set up text watchers
-            emailEdt.doAfterTextChanged { validateEmail(it.toString()) }
+
             usernameEdt.doAfterTextChanged { validateUsername(it.toString()) }
+            passwordEdt.doAfterTextChanged { validatePassword(it.toString()) }
+            nameEdt.doAfterTextChanged { validateFirstName(it.toString()) }
+            lastNameEdt.doAfterTextChanged { validateLastName(it.toString()) }
 
             nameEdt.setOnEditorActionListener { _, actionId, _ ->
                 handleEditorAction(actionId, lastNameEdt)
@@ -75,10 +78,10 @@ class RegisterFragment : Fragment() {
             }
 
             usernameEdt.setOnEditorActionListener { _, actionId, _ ->
-                handleEditorAction(actionId, emailEdt)
+                handleEditorAction(actionId, passwordEdt)
             }
 
-            emailEdt.setOnEditorActionListener { _, actionId, _ ->
+            passwordEdt.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     submitBtn.performClick()
                     true
@@ -92,13 +95,16 @@ class RegisterFragment : Fragment() {
                 val firstName = nameEdt.text.toString()
                 val lastName = lastNameEdt.text.toString()
                 val username = usernameEdt.text.toString()
+                val password = passwordEdt.text.toString()
 
                 if (validateFields(firstName, lastName, username) &&
                     validateUsername(username) &&
-                    validateEmail(email)
+                    validatePassword(password) &&
+                    validateFirstName(firstName) &&
+                    validateLastName(lastName)
                 ) {
                     // Set up the body for the API call
-                    body.email = email
+                    body.password = password
                     body.firstName = firstName
                     body.lastName = lastName
                     body.username = username
@@ -109,7 +115,7 @@ class RegisterFragment : Fragment() {
                             networkChecker.checkNetworkAvailability().collect { state ->
                                 if (state) {
                                     // Call the API
-                                    viewModel.callRegisterApi(Constants.MY_API_KEY, body)
+                                    viewModel.callRegisterApi(body)
                                 } else {
                                     root.showSnackBar(getString(R.string.checkConnection))
                                 }
@@ -127,33 +133,45 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun validateEmail(email: String): Boolean {
-        return if (email.isNotEmpty()) {
-            val pattern = Patterns.EMAIL_ADDRESS
-            if (pattern.matcher(email).matches()) {
-                this.email = email
-                binding.emailTxtLay.isErrorEnabled = false
+    private fun validateFields(firstName: String, lastName: String, username: String): Boolean {
+        return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty()
+    }
+    private fun validateFirstName(firstName: String): Boolean {
+        val nameRegex = "^[^\\d@\$].*"
+        return if (firstName.isNotEmpty()) {
+            if (firstName.length >= 3 && firstName.matches(nameRegex.toRegex())) {
+                binding.nameTxtLay.isErrorEnabled = false
                 true
             } else {
-                binding.emailTxtLay.error = getString(R.string.emailNotValid)
+                binding.nameTxtLay.error = getString(R.string.firstNameNotValid)
                 false
-
             }
         } else {
-            binding.emailTxtLay.isErrorEnabled = false
+            binding.nameTxtLay.isErrorEnabled = false
             false
-
         }
     }
 
-    private fun validateFields(firstName: String, lastName: String, username: String): Boolean {
-        return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty() && email.isNotEmpty()
+    private fun validateLastName(lastName: String): Boolean {
+        val nameRegex = "^[^\\d@\$].*"
+        return if (lastName.isNotEmpty()) {
+            if (lastName.length >= 3 && lastName.matches(nameRegex.toRegex())) {
+                binding.lastNameTxtLay.isErrorEnabled = false
+                true
+            } else {
+                binding.lastNameTxtLay.error = getString(R.string.lastNameNotValid)
+                false
+            }
+        } else {
+            binding.lastNameTxtLay.isErrorEnabled = false
+            false
+        }
     }
 
     private fun validateUsername(username: String): Boolean {
         return if (username.isNotEmpty()) {
             this.username = username
-            if (username.length in 4..16) {
+            if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
                 binding.usernameTxtLay.isErrorEnabled = false
                 true
             } else {
@@ -166,6 +184,21 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    private fun validatePassword(password: String): Boolean {
+        return if (password.isNotEmpty()) {
+            if (password.length >= 8) {
+                binding.passwordTxtLay.isErrorEnabled = false
+                true
+            } else {
+                binding.passwordTxtLay.error = getString(R.string.passwordTooShort)
+                false
+            }
+        } else {
+            binding.passwordTxtLay.isErrorEnabled = false
+            false
+        }
+    }
+
     private fun loadRegisterData() {
         viewModel.registerData.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -174,8 +207,9 @@ class RegisterFragment : Fragment() {
                 }
 
                 is NetworkRequest.Success -> {
-                    response.data?.let { data->
-                        viewModel.saveData(data.username.toString(), data.hash.toString())
+                    response.data?.data?.let { data ->
+
+                        viewModel.saveData(data.username!!)
                         findNavController().popBackStack(R.id.registerFragment, true)
                         findNavController().navigate(R.id.actionToRecipe)
                     }

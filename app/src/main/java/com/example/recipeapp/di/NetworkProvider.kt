@@ -13,16 +13,62 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.annotation.Signed
 import javax.inject.Singleton
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.inject.Named
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkProvider {
+    private fun createUnsafeOkHttpClient(): OkHttpClient {
+        try {
+            // Create a trust manager that trusts all certificates
+            val trustAllCerts: Array<TrustManager> = arrayOf(
+                object : X509TrustManager {
+                    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
 
+                    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate> {
+                        return arrayOf()
+                    }
+                }
+            )
+
+            // Create an SSL context that uses our trust manager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+
+            // Create an SSLSocketFactory with our SSL context
+            val sslSocketFactory: SSLSocketFactory = sslContext.socketFactory
+
+            // Disable certificate hostname verification
+            val hostnameVerifier = HostnameVerifier { _, _ -> true }
+
+            return OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+                .hostnameVerifier(hostnameVerifier)
+                .build()
+
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
     @Provides
+    @Named("Api1")
     @Singleton
-    fun provideBaseUrl() = Constants.BASE_URL
+    fun provideBaseUrl1() = Constants.BASE_URL_API1
+    @Provides
+    @Named("Api2")
+    @Singleton
+    fun provideBaseUrl2() = Constants.BASE_URL_API2
 
     @Provides
     @Singleton
@@ -49,8 +95,9 @@ object NetworkProvider {
 
 
     @Provides
+    @Named("Api1")
     @Singleton
-    fun provideRetrofit(baseUrl: String, gson: Gson, client: OkHttpClient): ApiServices =
+    fun provideRetrofitApi1(@Named("Api1") baseUrl: String, gson: Gson, client: OkHttpClient): ApiServices =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -58,5 +105,14 @@ object NetworkProvider {
             .build()
             .create(ApiServices::class.java)
 
-
+    @Provides
+    @Named("Api2")
+    @Singleton
+    fun provideRetrofitApi2(@Named("Api2") baseUrl: String): ApiServices =
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(createUnsafeOkHttpClient())
+            .build()
+            .create(ApiServices::class.java)
 }

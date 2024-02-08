@@ -12,6 +12,7 @@ open class NetworkResponse<T>(private val response: Response<T>) {
             response.code() == 402 -> NetworkRequest.Error("You free plan finished")
             response.code() == 422 -> NetworkRequest.Error("Api key not found!!!")
             response.code() == 500 -> NetworkRequest.Error("Try again!")
+            response.code() == 409 -> NetworkRequest.Error("Username already exists")
             response.isSuccessful -> NetworkRequest.Success(response.body()!!)
             else -> NetworkRequest.Error(response.message())
         }

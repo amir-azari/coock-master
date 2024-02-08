@@ -2,7 +2,8 @@ package com.example.recipeapp.utils
 
 object Constants {
 
-    const val BASE_URL = "https://api.spoonacular.com/"
+    const val BASE_URL_API1 = "https://api.spoonacular.com/"
+    const val BASE_URL_API2 = "https://10.0.2.2:8443/api/users/"
     const val BASE_URL_IMAGE_INGREDIENTS = "https://spoonacular.com/cdn/ingredients_100x100/"
     const val BASE_URL_IMAGE_RECIPE = "https://spoonacular.com/recipeImages/"
     const val CONNECTION_TIME = 60L

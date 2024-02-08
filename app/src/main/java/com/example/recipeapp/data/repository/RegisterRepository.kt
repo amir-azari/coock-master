@@ -33,10 +33,9 @@ class RegisterRepository @Inject constructor(
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.REGISTER_USER_INFO)
 
-    suspend fun saveRegisterData(username: String, hash: String) {
+    suspend fun saveRegisterData(username: String) {
         context.dataStore.edit {
             it[StoredKeys.username] = username
-            it[StoredKeys.hash] = hash
         }
     }
 
@@ -54,7 +53,7 @@ class RegisterRepository @Inject constructor(
         }
 
     //Api
-    suspend fun postRegister(apiKey: String, body: BodyRegister) = remote.postRegister(apiKey, body)
+    suspend fun postRegister(body: BodyRegister) = remote.postRegister(body)
 
 
 }

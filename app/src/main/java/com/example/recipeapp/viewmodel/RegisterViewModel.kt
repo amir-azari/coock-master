@@ -9,8 +9,6 @@ import com.example.recipeapp.models.register.ResponseRegister
 import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
@@ -18,17 +16,17 @@ class RegisterViewModel @Inject constructor(private val repository: RegisterRepo
     //API
     val registerData = MutableLiveData<NetworkRequest<ResponseRegister>>()
 
-    fun callRegisterApi(apiKey: String , body: BodyRegister) = viewModelScope.launch {
+    fun callRegisterApi(body: BodyRegister) = viewModelScope.launch {
         registerData.value = NetworkRequest.Loading()
 
-        val response = repository.postRegister(apiKey , body)
+        val response = repository.postRegister(body)
         registerData.value = NetworkResponse(response).generalNetworkResponse()
 
     }
 
     //Stored data
-    fun saveData(username: String, hash: String) =viewModelScope.launch {
-        repository.saveRegisterData(username, hash)
+    fun saveData(username: String) =viewModelScope.launch {
+        repository.saveRegisterData(username)
     }
 
     val readData = repository.readRegisterData
