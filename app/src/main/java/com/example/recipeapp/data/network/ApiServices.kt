@@ -2,6 +2,8 @@ package com.example.recipeapp.data.network
 
 import com.example.recipeapp.models.detail.ResponseDetail
 import com.example.recipeapp.models.detail.ResponseSimilar
+import com.example.recipeapp.models.login.BodyLogin
+import com.example.recipeapp.models.login.ResponseLogin
 import com.example.recipeapp.models.lucky.ResponseLucky
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.register.BodyRegister
@@ -20,6 +22,10 @@ interface ApiServices {
     // BASE_URL_API2 endpoints
     @POST("register")
     suspend fun postRegister(@Body body: BodyRegister): Response<ResponseRegister>
+    @POST("login")
+    suspend fun postLogin(@Body body: BodyLogin): Response<ResponseLogin>
+
+
 
     // BASE_URL_API1 endpoints
     @GET("recipes/complexSearch")

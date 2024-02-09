@@ -97,6 +97,7 @@ dependencies {
     implementation("com.airbnb.android:lottie:5.2.0")
     implementation("kr.co.prnd:readmore-textview:1.0.0")
 
+
 }
 kapt {
     correctErrorTypes = true

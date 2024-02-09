@@ -30,6 +30,8 @@ object Constants {
 
     //Register datastore
     const val REGISTER_USER_INFO = "register_user_info"
+    const val USER_INFO = "user_info"
+    const val LOGIN_USER_INFO = "login_user_info"
     const val REGISTER_USERNAME = "register_username"
     const val REGISTER_HASH = "register_hash"
 
