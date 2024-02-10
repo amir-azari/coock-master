@@ -7,7 +7,7 @@ import com.example.recipeapp.data.database.entity.DetailEntity
 import com.example.recipeapp.data.database.entity.FavoriteEntity
 import com.example.recipeapp.data.database.entity.RecipeEntity
 
-@Database(entities = [RecipeEntity::class,DetailEntity::class, FavoriteEntity::class], version = 6, exportSchema = false)
+@Database(entities = [RecipeEntity::class,DetailEntity::class, FavoriteEntity::class], version = 8, exportSchema = false)
 @TypeConverters(RecipeAppTypeConverter::class)
 abstract class RecipeAppDatabase : RoomDatabase() {
     abstract fun dao(): RecipeAppDao

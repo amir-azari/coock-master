@@ -48,7 +48,14 @@ class MainActivity : AppCompatActivity() {
         }
         //Menu
         binding.mainFabMenu.setOnClickListener {
-            navHost.navController.navigate(R.id.actionToMenu)
+            val currentFragmentId = navHost.navController.currentDestination?.id
+
+            if (currentFragmentId == R.id.recipeFragment) {
+                navHost.navController.navigate(R.id.actionToMenu)
+            }
+//            if (currentFragmentId == R.id.luckyFragment) {
+//                navHost.navController.navigate(R.id.actionToMenu)
+//            }
         }
     }
 

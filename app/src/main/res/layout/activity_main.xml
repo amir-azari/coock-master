@@ -30,7 +30,7 @@
         app:fabCradleRoundedCornerRadius="@dimen/_12mdp"
         app:fabCradleVerticalOffset="@dimen/_10mdp"
         >
-        
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mainBottomNav"
             android:layout_width="match_parent"

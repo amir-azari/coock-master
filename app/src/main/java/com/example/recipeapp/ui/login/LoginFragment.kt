@@ -1,12 +1,16 @@
 package com.example.recipeapp.ui.login
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.text.set
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -65,6 +69,22 @@ class LoginFragment : Fragment() {
 
         binding.apply {
             bgImg.load(R.drawable.login_bg)
+
+            val registerSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    // Navigate to the registration screen
+                    findNavController().popBackStack(R.id.loginFragment, true)
+                    findNavController().navigate(R.id.actionToRegister)
+                }
+            }
+
+            // Set up a SpannableString for the TextView
+            val spannable = SpannableString(getString(R.string.don_t_have_a_account_register))
+            spannable[spannable.length - "Register".length until spannable.length+1] = registerSpan
+
+            // Set the SpannableString to the TextView
+            Sing.text = spannable
+            Sing.movementMethod = LinkMovementMethod.getInstance()
 
             // Set up text watchers
 

@@ -60,21 +60,30 @@ class RecipeViewModel @Inject constructor(
 
     //---Recent---//
     //Queries
-    private var mealType = Constants.MAIN_COURSE
-    private var dietType = Constants.GLUTEN_FREE
+    private var mealType = ""
+    private var dietType = ""
+    private var cuisineType = ""
+    private var sorting = ""
+    private var order = ""
 
     fun recentQueries(): HashMap<String, String> {
         viewModelScope.launch {
             menuRepository.readMenuData.collect {
                 mealType = it.meal
                 dietType = it.diet
+                cuisineType = it.cuisine
+                sorting = it.sorting
+                order = it.order
             }
         }
         val queries: HashMap<String, String> = HashMap()
         queries[Constants.API_KEY] = Constants.MY_API_KEY
         queries[Constants.TYPE] = mealType
         queries[Constants.DIET] = dietType
-        queries[Constants.NUMBER] = "50"
+        queries[Constants.CUISINE] = cuisineType
+        queries[Constants.SORT] = sorting
+        queries[Constants.ORDER] = order
+        queries[Constants.NUMBER] = "100"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
     }

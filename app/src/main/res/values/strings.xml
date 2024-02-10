@@ -42,7 +42,9 @@
     <string name="lastNameNotValid">The last name is short or starts with a special character.</string>
     <string name="login">Login</string>
     <string name="don_t_have_a_account_register">Don\'t have a Account? Register</string>
-    <string name="already_a_member_sing_in">Already A Member? Sing in</string>
+    <string name="already_a_member_sing_in">Already A Member? Login</string>
+    <string name="cuisine_type">Cuisine Type</string>
+    <string name="sorting">Sorting</string>
 
 
 </resources>

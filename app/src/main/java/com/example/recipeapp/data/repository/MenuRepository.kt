@@ -24,18 +24,35 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
     private object StoredKey {
         val selectMealTitle = stringPreferencesKey(Constants.MENU_MEAL_TITLE_KEY)
         val selectMealId = intPreferencesKey(Constants.MENU_MEAL_ID_KEY)
+
         val selectDietTitle = stringPreferencesKey(Constants.MENU_DIET_TITLE_KEY)
         val selectDietId = intPreferencesKey(Constants.MENU_DIET_ID_KEY)
+
+        val selectCuisineTitle = stringPreferencesKey(Constants.MENU_CUISINE_TITLE_KEY)
+        val selectCuisineId = intPreferencesKey(Constants.MENU_CUISINE_ID_KEY)
+
+        val selectSortingTitle = stringPreferencesKey(Constants.MENU_SORTING_TITLE_KEY)
+        val selectSortingId = intPreferencesKey(Constants.MENU_SORTING_ID_KEY)
+
+        val selectOrderTitle = stringPreferencesKey(Constants.MENU_ORDER_TITLE_KEY)
+        val selectOrderId = intPreferencesKey(Constants.MENU_ORDER_ID_KEY)
     }
 
     private val Context.datastore: DataStore<Preferences> by preferencesDataStore(Constants.MENU_DATASTORE)
 
-    suspend fun saveMenuData(meal: String, mealId: Int, diet: String, dietId: Int) {
+    suspend fun saveMenuData(meal: String, mealId: Int, diet: String, dietId: Int , cuisine:String ,cuisineID:Int, sorting:String ,sortingID:Int , order:String ,orderID:Int) {
         context.datastore.edit {
             it[StoredKey.selectMealTitle] = meal
             it[StoredKey.selectMealId] = mealId
             it[StoredKey.selectDietTitle] = diet
             it[StoredKey.selectDietId] = dietId
+            it[StoredKey.selectCuisineTitle] = cuisine
+            it[StoredKey.selectCuisineId] = cuisineID
+            it[StoredKey.selectSortingTitle] = sorting
+            it[StoredKey.selectSortingId] = sortingID
+            it[StoredKey.selectOrderTitle] = order
+            it[StoredKey.selectOrderId] = orderID
+
         }
     }
 
@@ -52,6 +69,12 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
             val selectMealId = it[StoredKey.selectMealId] ?: 0
             val selectDiet = it[StoredKey.selectDietTitle] ?: Constants.GLUTEN_FREE
             val selectDietId = it[StoredKey.selectDietId] ?: 0
-            MenuStoredModel(selectMeal, selectMealId, selectDiet, selectDietId)
+            val selectCuisine = it[StoredKey.selectCuisineTitle] ?: Constants.AFRICAN
+            val selectCuisineId = it[StoredKey.selectCuisineId] ?: 0
+            val selectSorting = it[StoredKey.selectSortingTitle] ?: Constants.POPULARITY
+            val selectSortingId = it[StoredKey.selectSortingId] ?: 0
+            val selectOrder = it[StoredKey.selectOrderTitle] ?: Constants.ASCENDING
+            val selectOrderId = it[StoredKey.selectOrderId] ?: 0
+            MenuStoredModel(selectMeal, selectMealId, selectDiet, selectDietId , selectCuisine ,selectCuisineId , selectSorting ,selectSortingId , selectOrder , selectOrderId )
         }
 }

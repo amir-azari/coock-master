@@ -2,6 +2,7 @@ package com.example.recipeapp.ui.recipe
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -213,6 +214,7 @@ class RecipeFragment : Fragment() {
             gotoDetailPage(it)
         }
     }
+
 
 
     private fun setupLoading(isShownLoading: Boolean, shimmer: ShimmerRecyclerView) {

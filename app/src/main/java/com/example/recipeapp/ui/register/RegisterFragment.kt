@@ -1,12 +1,16 @@
 package com.example.recipeapp.ui.register
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.text.set
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -64,6 +68,21 @@ class RegisterFragment : Fragment() {
 
         binding.apply {
             bgImg.load(R.drawable.login_bg)
+            // Create a ClickableSpan for the "Sing in" text
+            val signInSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    findNavController().popBackStack(R.id.registerFragment, true)
+                    findNavController().navigate(R.id.actionToLogin)
+                }
+            }
+
+            // Set up a SpannableString for the TextView
+            val spannable = SpannableString(getString(R.string.already_a_member_sing_in))
+            spannable[spannable.length - "Login".length until spannable.length+1] = signInSpan
+
+            // Set the SpannableString to the TextView
+            SinInBtn.text = spannable
+            SinInBtn.movementMethod = LinkMovementMethod.getInstance()
 
             // Set up text watchers
 
@@ -92,11 +111,8 @@ class RegisterFragment : Fragment() {
                     false
                 }
             }
-            //click Login
-            SinInBtn.setOnClickListener {
-                findNavController().popBackStack(R.id.registerFragment, true)
-                findNavController().navigate(R.id.actionToLogin)
-            }
+
+
             // Click listener for the submit button
             submitBtn.setOnClickListener {
                 val firstName = nameEdt.text.toString()
@@ -216,14 +232,8 @@ class RegisterFragment : Fragment() {
                 is NetworkRequest.Success -> {
                     response.data?.data?.let { data ->
 
-                        lifecycleScope.launch {
-                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-
-                                sessionManager.saveToken(data.username!!)
-                            }
-                        }
                         findNavController().popBackStack(R.id.registerFragment, true)
-                        findNavController().navigate(R.id.actionToRecipe)
+                        findNavController().navigate(R.id.actionToLogin)
                     }
                 }
 
