@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +38,7 @@ class MenuFragment : BottomSheetDialogFragment() {
 
     //Other
     private lateinit var viewModel: MenuViewModel
+    private lateinit var isSortingSelectedLiveData: MutableLiveData<Boolean>
 
     private var chipCounter = 1
 
@@ -54,6 +56,9 @@ class MenuFragment : BottomSheetDialogFragment() {
 
     private var chipOrderTitle = ""
     private var chipOrderId = 0
+
+    private var isSortingChipClicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[MenuViewModel::class.java]
@@ -66,6 +71,8 @@ class MenuFragment : BottomSheetDialogFragment() {
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        isSortingSelectedLiveData = MutableLiveData(false)
+
         super.onViewCreated(view, savedInstanceState)
         //InitViews
         binding.apply {
@@ -90,12 +97,6 @@ class MenuFragment : BottomSheetDialogFragment() {
                 updateChip(it.sortingID, sortingChipGroup)
                 updateChip(it.orderID, orderChipGroup)
 
-                Log.d("Meal List" , it.meal)
-                Log.d("Meal List" , it.mealId.toString())
-                Log.d("Meal List" , it.diet)
-                Log.d("Meal List" , it.dietId.toString())
-                Log.d("Meal List" , it.cuisine)
-                Log.d("Meal List" , it.cuisineID.toString())
 
             }
             //Meal chips - click
@@ -137,7 +138,7 @@ class MenuFragment : BottomSheetDialogFragment() {
                     chipCuisineId = 0
                 }
             }
-            //Sorting chips - click
+            // Sorting chips - click
             sortingChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
                 var chip: Chip
                 checkedIds.forEach {
@@ -148,19 +149,30 @@ class MenuFragment : BottomSheetDialogFragment() {
                 if (checkedIds.isEmpty()) {
                     chipSortingTitle = ""
                     chipSortingId = 0
+                    isSortingSelectedLiveData.value = false
+                } else {
+                    isSortingSelectedLiveData.value = true
                 }
+                orderChipGroup.isEnabled = isSortingSelectedLiveData.value ?: false
+                orderChipGroup.clearCheck()
             }
+
 
             //Order chips - click
             orderChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                if (!(isSortingSelectedLiveData.value ?: false)) {
+                    // If no Sorting chip is selected, prevent Order chips from being checked
+                    group.clearCheck()
+                    return@setOnCheckedStateChangeListener
+                }
+
                 var chip: Chip
                 checkedIds.forEach {
                     chip = group.findViewById(it)
-                    if (chip.text.toString().lowercase() == "ascending"){
+                    if (chip.text.toString().lowercase() == "ascending") {
                         chipOrderTitle = "asc"
-                    }else if (chip.text.toString().lowercase() == "descending"){
+                    } else if (chip.text.toString().lowercase() == "descending") {
                         chipOrderTitle = "desc"
-
                     }
                     chipOrderId = it
                 }
@@ -169,6 +181,7 @@ class MenuFragment : BottomSheetDialogFragment() {
                     chipOrderId = 0
                 }
             }
+
 
             //Submit
             //Check Internet

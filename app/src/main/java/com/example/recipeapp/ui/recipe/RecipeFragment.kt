@@ -24,6 +24,7 @@ import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.recipe.ResponseRecipes.Result
 import com.example.recipeapp.utils.Constants
 import com.example.recipeapp.utils.NetworkRequest
+import com.example.recipeapp.utils.isVisible
 import com.example.recipeapp.utils.onceObserve
 import com.example.recipeapp.utils.setupRecyclerView
 import com.example.recipeapp.utils.showSnackBar
@@ -56,8 +57,6 @@ class RecipeFragment : Fragment() {
 
     //Other
     private val recipeViewModel: RecipeViewModel by viewModels()
-    private val registerViewModel: RegisterViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
     private val args: RecipeFragmentArgs by navArgs()
     private var atuScrollIndex = 0
 
@@ -168,6 +167,8 @@ class RecipeFragment : Fragment() {
                 database[1].response.results?.let { result ->
                     setupLoading(false, binding.recipesList)
                     recentAdapter.setData(result)
+                    binding.recipesList.isVisible(true, binding.emptyLay)
+
                 }
             } else {
                 recipeViewModel.callRecentApi(recipeViewModel.recentQueries())
@@ -189,13 +190,19 @@ class RecipeFragment : Fragment() {
                         response.data?.let { data ->
                             if (data.results!!.isNotEmpty()) {
                                 recentAdapter.setData(data.results)
+                                recipesList.isVisible(true, emptyLay)
                             }
                         }
                     }
 
                     is NetworkRequest.Error -> {
                         setupLoading(false, recipesList)
-                        binding.root.showSnackBar(response.message!!)
+                        if (response.message == "Not found any recipe!"){
+                            emptyLay.isVisible(true, recipesList)
+
+                        }else{
+                            binding.root.showSnackBar(response.message!!)
+                        }
                     }
                 }
             }

@@ -87,6 +87,7 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/_5mdp"
         android:paddingBottom="@dimen/_75mdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,6 +96,24 @@
         app:shimmer_recycler_item_count="1"
         app:shimmer_recycler_layout="@layout/item_recipes_shimmer"
         app:shimmer_recycler_shape="linear" />
+    <!--Empty List-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/emptyLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_70mdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popularList">
+
+        <include
+            layout="@layout/empty_items"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
