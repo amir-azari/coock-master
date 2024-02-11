@@ -91,6 +91,8 @@ dependencies {
     implementation("io.github.inflationx:calligraphy3:3.1.1")
     implementation("io.github.inflationx:viewpump:2.0.3")
     implementation("com.github.MrNouri:DynamicSizes:1.0")
+    //paging
+    implementation("androidx.paging:paging-runtime-ktx:3.2.0")
     //Other
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("com.todkars:shimmer-recyclerview:0.4.1")

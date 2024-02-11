@@ -1,9 +1,16 @@
 package com.example.recipeapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
+import androidx.paging.liveData
+import com.example.recipeapp.RecipePagingSource
 import com.example.recipeapp.data.database.entity.RecipeEntity
 import com.example.recipeapp.data.repository.MenuRepository
 import com.example.recipeapp.data.repository.RecipeRepository
@@ -65,6 +72,9 @@ class RecipeViewModel @Inject constructor(
     private var cuisineType = ""
     private var sorting = ""
     private var order = ""
+    private var time = 0
+
+
 
     fun recentQueries(): HashMap<String, String> {
         viewModelScope.launch {
@@ -74,6 +84,7 @@ class RecipeViewModel @Inject constructor(
                 cuisineType = it.cuisine
                 sorting = it.sorting
                 order = it.order
+                time = it.hourValue * 60 + it.minValue
             }
         }
         val queries: HashMap<String, String> = HashMap()
@@ -82,7 +93,15 @@ class RecipeViewModel @Inject constructor(
         queries[Constants.DIET] = dietType
         queries[Constants.CUISINE] = cuisineType
         queries[Constants.SORT] = sorting
-        queries[Constants.ORDER] = order
+        Log.d("order check" , order.toString())
+        queries[Constants.ORDER] = if (order != "") {
+            order
+        }else
+            "desc"
+        if (time != 0){
+            queries[Constants.MAXREADYTIME] = time.toString()
+        }
+        Log.d("MAXREADYTIME" , time.toString())
         queries[Constants.NUMBER] = "100"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
