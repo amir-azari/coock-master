@@ -12,8 +12,8 @@ object Constants {
 
 
 
-//        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
-        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
+        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
+//        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
 //        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
 //    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
 
@@ -26,11 +26,13 @@ object Constants {
     const val DIET = "diet"
     const val QUERY = "query"
     const val CUISINE = "cuisine"
-    const val ORDER = "order"
+    const val ORDER = "sortDirection"
+    const val MAXREADYTIME = "maxReadyTime"
+    const val OFFSET = "offset"
 
     //APIS value
     const val POPULARITY = "popularity"
-    const val ASCENDING = "asc"
+    const val DESCENDING = "desc"
     const val TRUE = "true"
     const val MAIN_COURSE = "main course"
     const val GLUTEN_FREE = "Gluten Free"
@@ -56,6 +58,8 @@ object Constants {
     const val MENU_SORTING_ID_KEY = "menu_sorting_id_key"
     const val MENU_ORDER_TITLE_KEY = "menu_order_title_key"
     const val MENU_ORDER_ID_KEY = "menu_order_id_key"
+    const val MENU_HOUR_KEY = "menu_hour_key"
+    const val MENU_MINUTE_KEY = "menu_minute_key"
     //Database
     const val RECIPE_TABLE_NAME = "recipe_table_name"
     const val DATABASE_NAME = "database_name"

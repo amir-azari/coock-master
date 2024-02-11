@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/_10mdp"
     tools:context=".ui.menu.MenuFragment">
     <!--Cuisine type-->
     <TextView
         android:id="@+id/cuisineTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_8mdp"
+        android:layout_margin="@dimen/_10mdp"
         android:text="@string/cuisine_type"
+        app:fontPath="fonts/atlas_bold.ttf"
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,8 +43,9 @@
     <TextView
         android:id="@+id/mealTypeTitle"
         android:layout_width="0dp"
-        android:layout_marginTop="@dimen/_8mdp"
         android:layout_height="wrap_content"
+        app:fontPath="fonts/atlas_bold.ttf"
+        android:layout_marginTop="@dimen/_4mdp"
         android:text="@string/meal_types"
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
@@ -77,8 +78,10 @@
         android:id="@+id/dietTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4mdp"
         android:text="@string/diets_type"
-        android:layout_marginTop="@dimen/_8mdp"
+        app:fontPath="fonts/atlas_bold.ttf"
+
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
         app:layout_constraintEnd_toEndOf="@id/mealTypeTitle"
@@ -111,10 +114,12 @@
         android:id="@+id/sortingTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4mdp"
         android:text="@string/sorting"
-        android:layout_marginTop="@dimen/_8mdp"
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
+        app:fontPath="fonts/atlas_bold.ttf"
+
         app:layout_constraintEnd_toEndOf="@id/dietTypeTitle"
         app:layout_constraintStart_toStartOf="@id/dietTypeTitle"
         app:layout_constraintTop_toBottomOf="@id/dietChipsScroll" />
@@ -140,34 +145,70 @@
             app:singleSelection="true" />
 
     </HorizontalScrollView>
+
     <HorizontalScrollView
         android:id="@+id/orderChipsScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_1mdp"
         android:clipToPadding="false"
         android:fadingEdge="horizontal"
+        android:layout_marginTop="@dimen/mines8mdp"
         android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/sortingChipsScroll">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/orderChipGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_5mdp"
-        app:chipSpacing="0dp"
-        app:singleLine="true"
-        app:singleSelection="true" />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/orderChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_5mdp"
+            app:chipSpacing="0dp"
+            app:singleLine="true"
+            app:singleSelection="true" />
     </HorizontalScrollView>
 
     <!--Submit-->
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/HourSlider"
+        android:layout_width="@dimen/_280mdp"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:valueFrom="0"
+        android:valueTo="12"
+        app:layout_constraintStart_toStartOf="@+id/MaxReadyTime"
+        app:layout_constraintTop_toBottomOf="@+id/MaxReadyTime" />
+
+    <TextView
+        android:id="@+id/MaxReadyTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4mdp"
+        android:text="@string/maximum_time_to_ready"
+        android:textColor="@color/jacarta"
+        android:textSize="@dimen/_12font_mdp"
+        app:fontPath="fonts/atlas_bold.ttf"
+        app:layout_constraintEnd_toEndOf="@+id/sortingTypeTitle"
+        app:layout_constraintStart_toStartOf="@+id/sortingTypeTitle"
+        app:layout_constraintTop_toBottomOf="@id/orderChipsScroll" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/MinSlider"
+        android:layout_width="@dimen/_280mdp"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:valueFrom="0"
+        android:valueTo="59"
+        app:layout_constraintStart_toStartOf="@+id/HourSlider"
+        app:layout_constraintTop_toBottomOf="@+id/HourSlider" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10mdp"
-        android:layout_marginTop="@dimen/_20mdp"
+        android:layout_marginBottom="@dimen/_20mdp"
+        android:layout_marginTop="@dimen/_10mdp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/submit"
@@ -176,7 +217,10 @@
         android:textSize="@dimen/_12font_mdp"
         app:backgroundTint="@color/yellowOrange"
         app:cornerRadius="@dimen/_8mdp"
-        app:layout_constraintTop_toBottomOf="@id/orderChipsScroll" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MinSlider"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="-9dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,5 +10,6 @@ data class MenuStoredModel(
     val sorting: String,
     val sortingID: Int,
     val order: String,
-    val orderID: Int
+    val orderID: Int,
+    val hourValue: Int, val minValue : Int
 )

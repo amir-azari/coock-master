@@ -87,7 +87,7 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/_5mdp"
         android:paddingBottom="@dimen/_75mdp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

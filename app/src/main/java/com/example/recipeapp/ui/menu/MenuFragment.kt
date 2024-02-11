@@ -24,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -56,6 +57,9 @@ class MenuFragment : BottomSheetDialogFragment() {
 
     private var chipOrderTitle = ""
     private var chipOrderId = 0
+
+    private var hourValue = 0
+    private var minValue = 0
 
     private var isSortingChipClicked = false
 
@@ -97,6 +101,8 @@ class MenuFragment : BottomSheetDialogFragment() {
                 updateChip(it.sortingID, sortingChipGroup)
                 updateChip(it.orderID, orderChipGroup)
 
+                updateSlider(it.hourValue, binding.HourSlider)
+                updateSlider(it.minValue, binding.MinSlider)
 
             }
             //Meal chips - click
@@ -160,8 +166,7 @@ class MenuFragment : BottomSheetDialogFragment() {
 
             //Order chips - click
             orderChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-                if (!(isSortingSelectedLiveData.value ?: false)) {
-                    // If no Sorting chip is selected, prevent Order chips from being checked
+                if (isSortingSelectedLiveData.value != true) {
                     group.clearCheck()
                     return@setOnCheckedStateChangeListener
                 }
@@ -182,14 +187,23 @@ class MenuFragment : BottomSheetDialogFragment() {
                 }
             }
 
+            //slider hour
+            HourSlider.addOnChangeListener {  slider, value, fromUser ->
+                hourValue = value.toInt()
 
+            }
+            //slider min
+            MinSlider.addOnChangeListener {  slider, value, fromUser ->
+                minValue = value.toInt()
+
+            }
             //Submit
             //Check Internet
             submitBtn.setOnClickListener {
                 lifecycleScope.launchWhenStarted {
                     networkChecker.checkNetworkAvailability().collect { state ->
                         if (state){
-                            viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId ,chipCuisineTitle , chipCuisineId , chipSortingTitle , chipSortingId , chipOrderTitle , chipOrderId)
+                            viewModel.saveToStore(chipMealTitle, chipMealId, chipDietTitle, chipDietId ,chipCuisineTitle , chipCuisineId , chipSortingTitle , chipSortingId , chipOrderTitle , chipOrderId , hourValue, minValue)
                             findNavController().navigate(MenuFragmentDirections.actionMenuToRecipe().setIsUpdateData(true))
                         } else {
                             Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
@@ -215,7 +229,9 @@ class MenuFragment : BottomSheetDialogFragment() {
         val chip = view.findViewById<Chip>(id)
         chip?.isChecked = true
     }
-
+    private fun updateSlider(value: Int, slider: Slider) {
+        slider.value = value.toFloat()
+    }
 
     override fun onDestroy() {
         super.onDestroy()

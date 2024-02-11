@@ -21,7 +21,9 @@ class MenuViewModel @Inject constructor(private val repository: MenuRepository) 
         sorting: String,
         sortingId: Int,
         order: String,
-        orderId: Int
+        orderId: Int,
+        hours:Int,
+        min:Int
     ) = viewModelScope.launch(Dispatchers.IO) {
         repository.saveMenuData(
             meal,
@@ -33,7 +35,9 @@ class MenuViewModel @Inject constructor(private val repository: MenuRepository) 
             sorting,
             sortingId,
             order,
-            orderId
+            orderId,
+            hours ,
+            min
         )
     }
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -201,15 +202,24 @@ class DetailFragment : Fragment() {
             }
             //Instructions
             instructionsCount.text = "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
-            val instructions = HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            val instructions = HtmlCompat.fromHtml(data.instructions.orEmpty(), HtmlCompat.FROM_HTML_MODE_COMPACT)
             instructionsDesc.text = instructions
             initInstructionsList(data.extendedIngredients.toMutableList())
             //Steps
-            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
-            stepsShowMore.setOnClickListener {
-                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
-                findNavController().navigate(direction)
+            data.analyzedInstructions?.let { instructions ->
+                if (instructions.isNotEmpty()) {
+                    initStepsList(instructions[0].steps!!.toMutableList())
+                } else {
+                    Toast.makeText(requireContext() , "steps" , Toast.LENGTH_SHORT)
+                }
             }
+            stepsShowMore.setOnClickListener {
+                data.analyzedInstructions?.takeIf { it.isNotEmpty() }?.let { instructions ->
+                    val direction = DetailFragmentDirections.actionDetailToSteps(instructions[0])
+                    findNavController().navigate(direction)
+                }
+            }
+
             //Diets
             setupChip(data.diets!!.toMutableList(), dietsChipGroup)
         }
