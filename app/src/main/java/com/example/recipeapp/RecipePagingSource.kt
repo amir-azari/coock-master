@@ -1,5 +1,6 @@
 package com.example.recipeapp
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.recipeapp.data.database.entity.RecipeEntity
@@ -8,6 +9,8 @@ import com.example.recipeapp.data.repository.RecipeRepository
 import com.example.recipeapp.data.source.RemoteDataSource
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.utils.Constants
+import com.example.recipeapp.utils.NetworkRequest
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class RecipePagingSource @Inject constructor(
@@ -16,25 +19,46 @@ class RecipePagingSource @Inject constructor(
 ) : PagingSource<Int, ResponseRecipes.Result>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ResponseRecipes.Result> {
-        try {
+        return try {
             val page = params.key ?: 0
             val response = repository.remote.getRecipes(queries + mapOf("offset" to page.toString()))
 
-            val data = response.body()?.results ?: emptyList()
-            val prevKey = if (page > 0) page - 1 else null
-            val nextKey = if (data.isNotEmpty()) page + 1 else null
+            if (response.isSuccessful) {
+                val data = response.body()?.results ?: emptyList()
 
-            return LoadResult.Page(
-                data = data,
-                prevKey = prevKey,
-                nextKey = nextKey
-            )
+                LoadResult.Page(
+                    data = data,
+                    prevKey = if (page == 0) null else page - 1,
+                    nextKey = if (data.isEmpty()) null else page + 40
+                )
+            } else {
+                when (val errorCode = response.code()) {
+                    401 -> {
+                        LoadResult.Error(Exception("You are not authorized"))
+                    }
+                    402 -> {
+                        LoadResult.Error(Exception("Your free plan has finished"))
+                    }
+                    422 -> {
+                        LoadResult.Error(Exception("API key not found!"))
+                    }
+                    500 -> {
+                        LoadResult.Error(Exception("Try again later"))
+                    }
+                    else -> {
+                        LoadResult.Error(Exception("Error loading recipes. Code: $errorCode"))
+                    }
+                }
+            }
         } catch (e: Exception) {
-            return LoadResult.Error(e)
+            LoadResult.Error(e)
+        } catch (e: HttpException) {
+            LoadResult.Error(e)
         }
     }
 
+
     override fun getRefreshKey(state: PagingState<Int, ResponseRecipes.Result>): Int? {
-        return state.anchorPosition
+        return null
     }
 }

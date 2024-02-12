@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -20,7 +21,7 @@ import com.example.recipeapp.utils.minToHour
 import com.example.recipeapp.utils.setDynamicallyColor
 import javax.inject.Inject
 
-class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.ViewHolder>() {
+class RecentAdapter @Inject constructor() : PagingDataAdapter<Result, RecentAdapter.ViewHolder>(RecipeDiffCallback) {
     //Binding
     private lateinit var binding: ItemRecipesBinding
 
@@ -34,17 +35,10 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(recentItem[position])
+        getItem(position)?.let { holder.bind(it) }
+        holder.setIsRecyclable(false)
+
     }
-
-    override fun getItemCount(): Int {
-        return recentItem.size
-    }
-
-    override fun getItemViewType(position: Int) = position
-
-    override fun getItemId(position: Int) = position.toLong()
-
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         holder.initAnimation()
@@ -56,7 +50,16 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
     }
 
     inner class ViewHolder() : RecyclerView.ViewHolder(binding.root) {
-
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    getItem(position)?.id?.let { recipeId ->
+                        onItemClickListener?.invoke(recipeId)
+                    }
+                }
+            }
+        }
         @SuppressLint("SetTextI18n")
         fun bind(item: Result) {
             binding.apply {
@@ -119,11 +122,14 @@ class RecentAdapter @Inject constructor() : RecyclerView.Adapter<RecentAdapter.V
         onItemClickListener = listener
     }
 
-    fun setData(data: List<Result>) {
-        val adapterDiffUtils = BaseDiffUtils(recentItem, data)
-        val diffUtils = DiffUtil.calculateDiff(adapterDiffUtils)
-        recentItem = data
-        diffUtils.dispatchUpdatesTo(this)
-    }
 
+    companion object {
+        private val RecipeDiffCallback = object : DiffUtil.ItemCallback<Result>() {
+            override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean =
+                oldItem == newItem
+        }
+    }
 }

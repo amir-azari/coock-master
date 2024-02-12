@@ -109,7 +109,7 @@ class SearchFragment : Fragment() {
                                 // List is not empty
                                 searchList.isVisible = true
                                 emptyLay.isVisible(false, searchList)
-                                recentAdapter.setData(data.results)
+//                                recentAdapter.setData(data.results)
                                 initRecentRecycler()
                             } else {
                                 // List is empty

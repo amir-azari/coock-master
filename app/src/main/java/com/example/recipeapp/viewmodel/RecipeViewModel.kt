@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import androidx.paging.liveData
@@ -20,6 +21,7 @@ import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -101,14 +103,22 @@ class RecipeViewModel @Inject constructor(
         if (time != 0){
             queries[Constants.MAXREADYTIME] = time.toString()
         }
-        Log.d("MAXREADYTIME" , time.toString())
-        queries[Constants.NUMBER] = "100"
+        queries[Constants.NUMBER] = "40"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
     }
 
     //Api
-    val recentData = MutableLiveData<NetworkRequest<ResponseRecipes>>()
+
+    private fun recentData(): Flow<PagingData<ResponseRecipes.Result>> {
+        return  Pager(PagingConfig(1 )){
+            RecipePagingSource(repository , recentQueries())
+        }.flow.cachedIn(viewModelScope)
+    }
+    val recentData = Pager(PagingConfig(1 )){
+        RecipePagingSource(repository , recentQueries())
+    }.flow.cachedIn(viewModelScope)
+/*
     fun callRecentApi(queries: Map<String, String>) = viewModelScope.launch {
         recentData.value = NetworkRequest.Loading()
         val response = repository.remote.getRecipes(queries)
@@ -118,6 +128,7 @@ class RecipeViewModel @Inject constructor(
         if (cache != null)
             offlineRecent(cache)
     }
+*/
 
     //Local
     private fun saveRecent(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
