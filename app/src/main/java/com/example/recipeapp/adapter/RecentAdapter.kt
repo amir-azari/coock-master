@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
 import com.example.recipeapp.R
+import com.example.recipeapp.data.database.entity.RecentRecipeEntity
 import com.example.recipeapp.databinding.ItemRecipesBinding
 import com.example.recipeapp.models.recipe.ResponseRecipes.Result
 import com.example.recipeapp.utils.BaseDiffUtils
@@ -21,12 +22,10 @@ import com.example.recipeapp.utils.minToHour
 import com.example.recipeapp.utils.setDynamicallyColor
 import javax.inject.Inject
 
-class RecentAdapter @Inject constructor() : PagingDataAdapter<Result, RecentAdapter.ViewHolder>(RecipeDiffCallback) {
+class RecentAdapter @Inject constructor() : PagingDataAdapter<RecentRecipeEntity, RecentAdapter.ViewHolder>(RecipeDiffCallback) {
     //Binding
     private lateinit var binding: ItemRecipesBinding
-
     //other
-    private var recentItem = emptyList<Result>()
     private lateinit var context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -61,7 +60,7 @@ class RecentAdapter @Inject constructor() : PagingDataAdapter<Result, RecentAdap
             }
         }
         @SuppressLint("SetTextI18n")
-        fun bind(item: Result) {
+        fun bind(item: RecentRecipeEntity) {
             binding.apply {
                 //Text
                 recipeNameTxt.text = item.title
@@ -124,11 +123,11 @@ class RecentAdapter @Inject constructor() : PagingDataAdapter<Result, RecentAdap
 
 
     companion object {
-        private val RecipeDiffCallback = object : DiffUtil.ItemCallback<Result>() {
-            override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean =
+        private val RecipeDiffCallback = object : DiffUtil.ItemCallback<RecentRecipeEntity>() {
+            override fun areItemsTheSame(oldItem: RecentRecipeEntity, newItem: RecentRecipeEntity): Boolean =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean =
+            override fun areContentsTheSame(oldItem: RecentRecipeEntity, newItem: RecentRecipeEntity): Boolean =
                 oldItem == newItem
         }
     }

@@ -70,15 +70,15 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
             }
         }
         .map {
-            val selectMeal = it[StoredKey.selectMealTitle] ?: Constants.MAIN_COURSE
+            val selectMeal = it[StoredKey.selectMealTitle] ?: ""
             val selectMealId = it[StoredKey.selectMealId] ?: 0
-            val selectDiet = it[StoredKey.selectDietTitle] ?: Constants.GLUTEN_FREE
+            val selectDiet = it[StoredKey.selectDietTitle] ?: ""
             val selectDietId = it[StoredKey.selectDietId] ?: 0
-            val selectCuisine = it[StoredKey.selectCuisineTitle] ?: Constants.AFRICAN
+            val selectCuisine = it[StoredKey.selectCuisineTitle] ?: ""
             val selectCuisineId = it[StoredKey.selectCuisineId] ?: 0
-            val selectSorting = it[StoredKey.selectSortingTitle] ?: Constants.POPULARITY
+            val selectSorting = it[StoredKey.selectSortingTitle] ?: ""
             val selectSortingId = it[StoredKey.selectSortingId] ?: 0
-            val selectOrder = it[StoredKey.selectOrderTitle] ?: Constants.DESCENDING
+            val selectOrder = it[StoredKey.selectOrderTitle] ?: ""
             val selectOrderId = it[StoredKey.selectOrderId] ?: 0
             val selectHour = it[StoredKey.selectHour] ?: 0
             val selectMinute = it[StoredKey.selectMinute] ?: 0

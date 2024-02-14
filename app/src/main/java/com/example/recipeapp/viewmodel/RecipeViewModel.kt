@@ -77,7 +77,6 @@ class RecipeViewModel @Inject constructor(
     private var time = 0
 
 
-
     fun recentQueries(): HashMap<String, String> {
         viewModelScope.launch {
             menuRepository.readMenuData.collect {
@@ -95,52 +94,28 @@ class RecipeViewModel @Inject constructor(
         queries[Constants.DIET] = dietType
         queries[Constants.CUISINE] = cuisineType
         queries[Constants.SORT] = sorting
-        Log.d("order check" , order.toString())
+        Log.d("order check", order.toString())
         queries[Constants.ORDER] = if (order != "") {
             order
-        }else
+        } else
             "desc"
-        if (time != 0){
+        if (time != 0) {
             queries[Constants.MAXREADYTIME] = time.toString()
         }
-        queries[Constants.NUMBER] = "40"
+        queries[Constants.NUMBER] = "5"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
     }
 
     //Api
-
-    private fun recentData(): Flow<PagingData<ResponseRecipes.Result>> {
-        return  Pager(PagingConfig(1 )){
-            RecipePagingSource(repository , recentQueries())
-        }.flow.cachedIn(viewModelScope)
-    }
-    val recentData = Pager(PagingConfig(1 )){
-        RecipePagingSource(repository , recentQueries())
+    val recentData = Pager(PagingConfig(1)) {
+        RecipePagingSource(repository, recentQueries())
     }.flow.cachedIn(viewModelScope)
-/*
-    fun callRecentApi(queries: Map<String, String>) = viewModelScope.launch {
-        recentData.value = NetworkRequest.Loading()
-        val response = repository.remote.getRecipes(queries)
-        recentData.value = recentNetworkResponse(response)
-        //Cache
-        val cache = recentData.value?.data
-        if (cache != null)
-            offlineRecent(cache)
-    }
-*/
+
+    suspend fun clearData() = repository.local.clearRecentData()
 
     //Local
-    private fun saveRecent(entity: RecipeEntity) = viewModelScope.launch(Dispatchers.IO) {
-        repository.local.saveRecipes(entity)
-    }
-
-    val readRecentFromDb = repository.local.loadRecipes().asLiveData()
-
-    private fun offlineRecent(response: ResponseRecipes) {
-        val entity = RecipeEntity(1, response)
-        saveRecent(entity)
-    }
+    val readRecentFromDb = repository.local.loadRecentRecipes().asLiveData()
 
     private fun recentNetworkResponse(response: Response<ResponseRecipes>): NetworkRequest<ResponseRecipes> {
         return when {

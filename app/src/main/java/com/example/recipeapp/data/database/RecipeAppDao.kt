@@ -1,5 +1,7 @@
 package com.example.recipeapp.data.database
 
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,7 +10,9 @@ import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import com.example.recipeapp.data.database.entity.DetailEntity
 import com.example.recipeapp.data.database.entity.FavoriteEntity
+import com.example.recipeapp.data.database.entity.RecentRecipeEntity
 import com.example.recipeapp.data.database.entity.RecipeEntity
+import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.utils.Constants
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +24,14 @@ interface RecipeAppDao {
 
     @Query("SELECT * FROM ${Constants.RECIPE_TABLE_NAME} ORDER BY ID ASC")
     fun loadRecipes(): Flow<List<RecipeEntity>>
+
+    //Recent
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun saveRecentRecipes(entity: RecentRecipeEntity)
+    @Query("SELECT * FROM ${Constants.RECENT_RECIPE_TABLE_NAME} ")
+    fun loadRecentRecipes(): Flow<List<RecentRecipeEntity>>
+    @Query("DELETE FROM ${Constants.RECENT_RECIPE_TABLE_NAME}")
+    suspend fun clearRecentData()
 
     //Detail
     @Insert(onConflict = REPLACE)

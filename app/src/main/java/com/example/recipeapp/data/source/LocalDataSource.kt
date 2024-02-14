@@ -3,6 +3,7 @@ package com.example.recipeapp.data.source
 import com.example.recipeapp.data.database.RecipeAppDao
 import com.example.recipeapp.data.database.entity.DetailEntity
 import com.example.recipeapp.data.database.entity.FavoriteEntity
+import com.example.recipeapp.data.database.entity.RecentRecipeEntity
 import com.example.recipeapp.data.database.entity.RecipeEntity
 import javax.inject.Inject
 
@@ -10,6 +11,11 @@ class LocalDataSource @Inject constructor(private val dao: RecipeAppDao) {
     //Recipes
     suspend fun saveRecipes(entity: RecipeEntity) = dao.saveRecipes(entity)
     fun loadRecipes() = dao.loadRecipes()
+
+    //Recent recipes
+    suspend fun clearRecentData() = dao.clearRecentData()
+    suspend fun saveRecentRecipes(entity: RecentRecipeEntity) = dao.saveRecentRecipes(entity)
+    fun loadRecentRecipes() = dao.loadRecentRecipes()
 
     //Detail
     suspend fun saveDetail(entity: DetailEntity) = dao.saveDetail(entity)

@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -65,6 +66,7 @@ class RecipeFragment : Fragment() {
     private val recipeViewModel: RecipeViewModel by viewModels()
     private val args: RecipeFragmentArgs by navArgs()
     private var atuScrollIndex = 0
+    private var dataSize = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +91,6 @@ class RecipeFragment : Fragment() {
         callRecentData()
         //Load data
         loadPopularData()
-        loadRecentData()
     }
 
     //---Popular---
@@ -108,6 +109,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun loadPopularData() {
+
         binding.apply {
             recipeViewModel.popularData.observe(viewLifecycleOwner) { response ->
                 when (response) {
@@ -134,6 +136,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initPopularRecycler() {
+
         val snapHelper = LinearSnapHelper()
         binding.popularList.setupRecyclerView(
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false),
@@ -168,32 +171,25 @@ class RecipeFragment : Fragment() {
 
     private fun callRecentData() {
 
-        recipeViewModel.recentQueries()
         initRecentRecycler()
 
-        //Load data
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                recipeViewModel.recentData.collect {
-                    recentAdapter.submitData(it)
-
-
-                    binding.recipesList.visibility = View.VISIBLE
-                }
+        if (args.isUpdateData) {
+            lifecycleScope.launch {
+                recipeViewModel.clearData()
             }
         }
 
 
-
         //Loading
         lifecycleScope.launch {
+
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 recentAdapter.loadStateFlow.collectLatest { loadState ->
                     val state = loadState.refresh
                     binding.shimmerRecipeLay.isVisible = state is LoadState.Loading
 
                     if (state is LoadState.Error) {
-                        val errorMessage = when (state.error) {
+                        when (state.error) {
 
                             is Exception -> state.error
 
@@ -201,7 +197,8 @@ class RecipeFragment : Fragment() {
                         }
 
                         // Show Toast with the error message
-                        Toast.makeText(context, "Error: ${state.error.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Error: ${state.error.message}", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -226,56 +223,38 @@ class RecipeFragment : Fragment() {
         }
 
 
-        /*recipeViewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
+        recipeViewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->
             if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
-                database[1].response.results?.let { result ->
-                    setupLoading(false, binding.recipesList)
-                    recentAdapter.setData(result)
-                    binding.recipesList.isVisible(true, binding.emptyLay)
-
+                lifecycleScope.launch {
+                    database.let { result ->
+                        Log.d("LogResult", result.size.toString())
+                        dataSize = result.size
+                        val pagingData = PagingData.from(result)
+                        recentAdapter.submitData(pagingData)
+                        binding.recipesList.isVisible(true, binding.emptyLay)
+                    }
                 }
             } else {
-                recipeViewModel.callRecentApi(recipeViewModel.recentQueries())
+                recipeViewModel.recentQueries()
+                //Load data
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.CREATED) {
+                        recipeViewModel.recentData.collect {
+                            recentAdapter.submitData(it)
+                            binding.recipesList.visibility = View.VISIBLE
+
+                        }
+                    }
+                }
             }
-        }*/
+        }
+
     }
 
     private fun showToast(message: String) {
-        // Show a toast message or handle the error in a way that suits your application
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun loadRecentData() {
-//        binding.apply {
-//            recipeViewModel.recentData.observe(viewLifecycleOwner) { response ->
-//                when (response) {
-//                    is NetworkRequest.Loading -> {
-//                        setupLoading(true, recipesList)
-//                    }
-//
-//                    is NetworkRequest.Success -> {
-//                        setupLoading(false, recipesList)
-//                        response.data?.let { data ->
-//                            if (data.results!!.isNotEmpty()) {
-//                                recentAdapter.setData(data.results)
-//                                recipesList.isVisible(true, emptyLay)
-//                            }
-//                        }
-//                    }
-//
-//                    is NetworkRequest.Error -> {
-//                        setupLoading(false, recipesList)
-//                        if (response.message == "Not found any recipe!"){
-//                            emptyLay.isVisible(true, recipesList)
-//
-//                        }else{
-//                            binding.root.showSnackBar(response.message!!)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-    }
 
     private fun initRecentRecycler() {
 
