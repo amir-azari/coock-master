@@ -194,12 +194,11 @@ class RecipeFragment : Fragment() {
 
                             is Exception -> state.error
 
-                            else -> "Unknown error"
+                            else -> showToast("Unknown error")
                         }
 
-                        // Show Toast with the error message
-                        Toast.makeText(context, "Error: ${state.error.message}", Toast.LENGTH_SHORT)
-                            .show()
+                        showToast("Error: ${state.error.message}")
+
                     }
                 }
             }
@@ -213,21 +212,7 @@ class RecipeFragment : Fragment() {
             }
         )
 
-        recentAdapter.addLoadStateListener { loadState ->
 
-            if (loadState.append.endOfPaginationReached) {
-                if (recentAdapter.itemCount < 1)
-                    binding.apply {
-                        emptyLay.visibility = View.VISIBLE
-                    }
-                else
-                    binding.apply {
-                        recipesList.visibility = View.VISIBLE
-                        emptyLay.visibility = View.GONE
-                    }
-
-            }
-        }
 
 
         recipeViewModel.readRecentFromDb.onceObserve(viewLifecycleOwner) { database ->

@@ -245,7 +245,7 @@
                     android:textColor="@color/jacarta"
                     android:textSize="@dimen/_10font_mdp"
                     app:drawableStartCompat="@drawable/ic_pot_food"
-                    app:drawableTint="@color/jacarta"
+                    app:drawableTint="@color/yellowOrange"
                     app:fontPath="fonts/atlas_bold.ttf"
                     app:layout_constraintStart_toStartOf="@id/nameTxt"
                     app:layout_constraintTop_toBottomOf="@id/line2" />
@@ -307,7 +307,7 @@
                     android:textColor="@color/jacarta"
                     android:textSize="@dimen/_10font_mdp"
                     app:drawableStartCompat="@drawable/ic_bowl_chopsticks_noodles"
-                    app:drawableTint="@color/jacarta"
+                    app:drawableTint="@color/yellowOrange"
                     app:fontPath="fonts/atlas_bold.ttf"
                     app:layout_constraintStart_toStartOf="@id/nameTxt"
                     app:layout_constraintTop_toBottomOf="@id/line3" />
@@ -359,7 +359,7 @@
                     android:textColor="@color/jacarta"
                     android:textSize="@dimen/_10font_mdp"
                     app:drawableStartCompat="@drawable/ic_salad"
-                    app:drawableTint="@color/jacarta"
+                    app:drawableTint="@color/yellowOrange"
                     app:fontPath="fonts/atlas_bold.ttf"
                     app:layout_constraintStart_toStartOf="@id/nameTxt"
                     app:layout_constraintTop_toBottomOf="@id/line4" />

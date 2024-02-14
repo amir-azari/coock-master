@@ -89,18 +89,21 @@ class SearchFragment : Fragment() {
             //Search
             searchEdt.addTextChangedListener { editable ->
                 val query = editable?.toString()?.trim() ?: ""
-                if (query.length > 2 && isNetworkAvailable) {
+
+                if (query.length > 2 && isNetworkAvailable ) {
                     viewModel.setSearchQuery(query)
                     searchList.isVisible(true, emptyLay)
-                }
-            }
-            lifecycleScope.launch {
-                viewModel.searchData.collectLatest {
 
-                    recentAdapter.notifyDataSetChanged()
-                    recentAdapter.submitData(it)
+                    lifecycleScope.launch {
+                        viewModel.searchData.collectLatest {
+
+                            recentAdapter.submitData(PagingData.empty())
+                            recentAdapter.notifyDataSetChanged()
+                            recentAdapter.submitData(it)
 
 
+                        }
+                    }
                 }
             }
         }
@@ -114,6 +117,7 @@ class SearchFragment : Fragment() {
 
         initRecentRecycler()
 
+
         //Load more
         binding.searchList.adapter = recentAdapter.withLoadStateFooter(
             LoadMoreAdapter {
@@ -121,8 +125,49 @@ class SearchFragment : Fragment() {
             }
         )
 
-    }
+        //loading
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                recentAdapter.loadStateFlow.collectLatest { loadState ->
+                    val state = loadState.refresh
+                    binding.shimmerRecipeLay.isVisible = state is LoadState.Loading
 
+                    if (state is LoadState.Error) {
+                        when (state.error) {
+
+                            is Exception -> state.error
+
+                            else -> showToast("Unknown error")
+                        }
+
+                        showToast("Error: ${state.error.message}")
+
+                    }
+                }
+
+            }
+        }
+        //Empty
+        recentAdapter.addLoadStateListener { loadState ->
+
+            if (loadState.append.endOfPaginationReached) {
+                if (recentAdapter.itemCount < 1)
+                    binding.apply {
+                        emptyLay.visibility = View.VISIBLE
+                    }
+                else
+                    binding.apply {
+                        searchList.visibility = View.VISIBLE
+                        emptyLay.visibility = View.GONE
+                    }
+
+            }
+        }
+
+    }
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
     private fun initRecentRecycler() {
         binding.searchList.setupRecyclerView(
             LinearLayoutManager(requireContext()),
@@ -142,6 +187,7 @@ class SearchFragment : Fragment() {
     private fun initInternetLayout(isConnected: Boolean) {
         binding.internetLay.visibility = if (isConnected) View.GONE else View.VISIBLE
         binding.emptyLay.visibility = View.GONE
+        binding.searchList.visibility = View.GONE
     }
 
     override fun onDestroy() {

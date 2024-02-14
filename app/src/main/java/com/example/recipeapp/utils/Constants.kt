@@ -12,10 +12,12 @@ object Constants {
 
 
 
-//        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
+    //        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
 //        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
-        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
+    const val MY_API_KEY = "bcd815a84baf41cb92ff9cfd3d526250"
+//        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
 //    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
+//const val MY_API_KEY = "fd80793063ce4faea1e5515031576a77"
 
     //APIs key
     const val API_KEY = "apiKey"
