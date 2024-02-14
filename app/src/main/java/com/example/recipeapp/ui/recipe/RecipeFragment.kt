@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.recipeapp.adapter.PopularAdapter
 import com.example.recipeapp.R
+import com.example.recipeapp.adapter.LoadMoreAdapter
 import com.example.recipeapp.adapter.RecentAdapter
 import com.example.recipeapp.data.SessionManager
 import com.example.recipeapp.databinding.FragmentRecipeBinding
@@ -205,6 +206,12 @@ class RecipeFragment : Fragment() {
         }
 
 
+        //Load more
+        binding.recipesList.adapter = recentAdapter.withLoadStateFooter(
+            LoadMoreAdapter{
+                recentAdapter.retry()
+            }
+        )
 
         recentAdapter.addLoadStateListener { loadState ->
 
