@@ -234,8 +234,6 @@ class RecipeFragment : Fragment() {
             if (database.isNotEmpty() && database.size > 1 && !args.isUpdateData) {
                 lifecycleScope.launch {
                     database.let { result ->
-                        Log.d("LogResult", result.size.toString())
-                        dataSize = result.size
                         val pagingData = PagingData.from(result)
                         recentAdapter.submitData(pagingData)
                         binding.recipesList.isVisible(true, binding.emptyLay)

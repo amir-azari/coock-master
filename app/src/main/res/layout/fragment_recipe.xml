@@ -79,24 +79,6 @@
         app:layout_constraintStart_toStartOf="@id/userInfoLay"
         app:layout_constraintTop_toBottomOf="@id/popularList" />
     <!--Recipes-->
-<!--    <com.todkars.shimmer.ShimmerRecyclerView
-        android:id="@+id/recipesList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/_5mdp"
-        android:paddingBottom="@dimen/_75mdp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recentRecipesTitle"
-        app:shimmer_recycler_auto_start="true"
-        app:shimmer_recycler_item_count="1"
-        app:shimmer_recycler_layout="@layout/item_recipes_shimmer"
-        app:shimmer_recycler_shape="linear" />-->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipesList"
         android:layout_width="0dp"

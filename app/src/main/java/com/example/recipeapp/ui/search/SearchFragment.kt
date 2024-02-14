@@ -8,24 +8,32 @@ import android.view.ViewGroup
 
 import android.graphics.Rect
 import android.util.Log
-import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LOGGER
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recipeapp.adapter.LoadMoreAdapter
 import com.example.recipeapp.adapter.RecentAdapter
+import com.example.recipeapp.adapter.SearchAdapter
 import com.example.recipeapp.databinding.FragmentSearchBinding
 import com.example.recipeapp.ui.recipe.RecipeFragmentDirections
 import com.example.recipeapp.utils.NetworkChecker
-import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.isVisible
 import com.example.recipeapp.utils.setupRecyclerView
-import com.example.recipeapp.utils.showSnackBar
 import com.example.recipeapp.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import okhttp3.internal.notifyAll
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -36,16 +44,22 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var recentAdapter: RecentAdapter
+    lateinit var recentAdapter: SearchAdapter
 
     @Inject
     lateinit var networkChecker: NetworkChecker
+
 
     //Other
     private val viewModel: SearchViewModel by viewModels()
     private var isNetworkAvailable by Delegates.notNull<Boolean>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentSearchBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -73,60 +87,41 @@ class SearchFragment : Fragment() {
             }
 
             //Search
-            searchEdt.addTextChangedListener {
-                if (it.toString().length > 2 && isNetworkAvailable) {
-                    searchEdt.isVisible = true
-                    viewModel.callSearchApi(viewModel.searchQueries(it.toString()))
-                } else {
-                    // Check for internet connection
-                    if (isNetworkAvailable) {
-                        // Internet is available, but the list is empty
-                        emptyLay.isVisible(true, searchList)
-                    } else {
-                        // Internet is not available
-                        internetLay.isVisible(true, searchList)
-                    }
+            searchEdt.addTextChangedListener { editable ->
+                val query = editable?.toString()?.trim() ?: ""
+                if (query.length > 2 && isNetworkAvailable) {
+                    viewModel.setSearchQuery(query)
+                    searchList.isVisible(true, emptyLay)
+                }
+            }
+            lifecycleScope.launch {
+                viewModel.searchData.collectLatest {
+
+                    recentAdapter.notifyDataSetChanged()
+                    recentAdapter.submitData(it)
+
+
                 }
             }
         }
+
 
         // Show data
         loadRecentData()
     }
 
-    // Inside the loadRecentData function
     private fun loadRecentData() {
-        binding.apply {
-            viewModel.searchData.observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is NetworkRequest.Loading -> {
-                        searchList.showShimmer()
-                    }
-                    is NetworkRequest.Success -> {
-                        searchList.hideShimmer()
-                        response.data?.let { data ->
-                            if (data.results!!.isNotEmpty()) {
-                                // List is not empty
-                                searchList.isVisible = true
-                                emptyLay.isVisible(false, searchList)
-//                                recentAdapter.setData(data.results)
-                                initRecentRecycler()
-                            } else {
-                                // List is empty
-                                searchList.isVisible = false
-                                emptyLay.isVisible(true, searchList)
-                            }
-                        }
-                    }
-                    is NetworkRequest.Error -> {
-                        searchList.hideShimmer()
-                        binding.root.showSnackBar(response.message!!)
-                    }
-                }
-            }
-        }
-    }
 
+        initRecentRecycler()
+
+        //Load more
+        binding.searchList.adapter = recentAdapter.withLoadStateFooter(
+            LoadMoreAdapter {
+                recentAdapter.retry()
+            }
+        )
+
+    }
 
     private fun initRecentRecycler() {
         binding.searchList.setupRecyclerView(
@@ -151,9 +146,6 @@ class SearchFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        networkChecker.unregisterNetworkCallback()
         _binding = null
     }
-
-
 }

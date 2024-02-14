@@ -13,8 +13,8 @@ object Constants {
 
 
 //        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
-        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
-//        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
+//        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
+        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
 //    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
 
     //APIs key
@@ -75,4 +75,5 @@ object Constants {
     const val LIMITED_COUNT = 10
     const val FULL_COUNT = 50
     var STEPS_COUNT = 0
+    val DEFAULT_SEARCH_QUERY = "default_search_query"
 }

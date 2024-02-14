@@ -1,17 +1,10 @@
-package com.example.recipeapp
+package com.example.recipeapp.paging
 
-import android.util.Log
-import kotlin.text.MatchGroup
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.recipeapp.data.database.entity.RecentRecipeEntity
-import com.example.recipeapp.data.database.entity.RecipeEntity
-import com.example.recipeapp.data.network.ApiServices
 import com.example.recipeapp.data.repository.RecipeRepository
-import com.example.recipeapp.data.source.RemoteDataSource
 import com.example.recipeapp.models.recipe.ResponseRecipes
-import com.example.recipeapp.utils.Constants
-import com.example.recipeapp.utils.NetworkRequest
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -43,7 +36,7 @@ class RecipePagingSource @Inject constructor(
             LoadResult.Page(
                 data = data,
                 prevKey = if (page == 0) null else page - 1,
-                nextKey = if (data.isEmpty()) null else page + 5
+                nextKey = if (data.isEmpty()) null else page + 20
 
             )
 

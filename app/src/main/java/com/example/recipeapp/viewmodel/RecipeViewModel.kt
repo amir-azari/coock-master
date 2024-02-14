@@ -7,11 +7,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import androidx.paging.liveData
-import com.example.recipeapp.RecipePagingSource
+import com.example.recipeapp.paging.RecipePagingSource
 import com.example.recipeapp.data.database.entity.RecipeEntity
 import com.example.recipeapp.data.repository.MenuRepository
 import com.example.recipeapp.data.repository.RecipeRepository
@@ -21,7 +18,6 @@ import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -102,7 +98,7 @@ class RecipeViewModel @Inject constructor(
         if (time != 0) {
             queries[Constants.MAXREADYTIME] = time.toString()
         }
-        queries[Constants.NUMBER] = "5"
+        queries[Constants.NUMBER] = "20"
         queries[Constants.ADD_RECIPE_INFORMATION] = Constants.TRUE
         return queries
     }
@@ -116,18 +112,5 @@ class RecipeViewModel @Inject constructor(
 
     //Local
     val readRecentFromDb = repository.local.loadRecentRecipes().asLiveData()
-
-    private fun recentNetworkResponse(response: Response<ResponseRecipes>): NetworkRequest<ResponseRecipes> {
-        return when {
-            response.message().contains("timeout") -> NetworkRequest.Error("Timeout")
-            response.code() == 401 -> NetworkRequest.Error("You are not authorized")
-            response.code() == 402 -> NetworkRequest.Error("Your free plan finished")
-            response.code() == 422 -> NetworkRequest.Error("Api key not found!")
-            response.code() == 500 -> NetworkRequest.Error("Try again")
-            response.body()!!.results.isNullOrEmpty() -> NetworkRequest.Error("Not found any recipe!")
-            response.isSuccessful -> NetworkRequest.Success(response.body()!!)
-            else -> NetworkRequest.Error(response.message())
-        }
-    }
 
 }
