@@ -12,12 +12,12 @@ object Constants {
 
 
 
-    //        const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
+//            const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
 //        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
-    const val MY_API_KEY = "bcd815a84baf41cb92ff9cfd3d526250"
+//    const val MY_API_KEY = "bcd815a84baf41cb92ff9cfd3d526250"
 //        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
 //    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
-//const val MY_API_KEY = "fd80793063ce4faea1e5515031576a77"
+const val MY_API_KEY = "fd80793063ce4faea1e5515031576a77"
 
     //APIs key
     const val API_KEY = "apiKey"
@@ -62,6 +62,16 @@ object Constants {
     const val MENU_ORDER_ID_KEY = "menu_order_id_key"
     const val MENU_HOUR_KEY = "menu_hour_key"
     const val MENU_MINUTE_KEY = "menu_minute_key"
+
+    //Search Menu datastore
+    const val SEARCH_MENU_DATASTORE = "search_menu_datastore"
+    const val SEARCH_MENU_SORTING_TITLE_KEY = "search_menu_sorting_title_key"
+    const val SEARCH_MENU_SORTING_ID_KEY = "search_menu_sorting_id_key"
+    const val SEARCH_MENU_ORDER_TITLE_KEY = "search_menu_order_title_key"
+    const val SEARCH_MENU_ORDER_ID_KEY = "search_menu_order_id_key"
+    const val SEARCH_MENU_HOUR_KEY = "search_menu_hour_key"
+    const val SEARCH_MENU_MINUTE_KEY = "search_menu_minute_key"
+
     //Database
     const val RECIPE_TABLE_NAME = "recipe_table_name"
     const val RECENT_RECIPE_TABLE_NAME = "recent_recipe_table_name"

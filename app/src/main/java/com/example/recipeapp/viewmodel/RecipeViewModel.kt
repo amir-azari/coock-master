@@ -90,7 +90,6 @@ class RecipeViewModel @Inject constructor(
         queries[Constants.DIET] = dietType
         queries[Constants.CUISINE] = cuisineType
         queries[Constants.SORT] = sorting
-        Log.d("order check", order.toString())
         queries[Constants.ORDER] = if (order != "") {
             order
         } else

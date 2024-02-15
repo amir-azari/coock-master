@@ -1,12 +1,6 @@
 package com.example.recipeapp.models.menu
 
-data class MenuStoredModel(
-    val meal: String,
-    val mealId: Int,
-    val diet: String,
-    val dietId: Int,
-    val cuisine: String,
-    val cuisineID: Int,
+data class SearchMenuStoredModel(
     val sorting: String,
     val sortingID: Int,
     val order: String,

@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LOGGER
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -25,6 +26,7 @@ import com.example.recipeapp.adapter.LoadMoreAdapter
 import com.example.recipeapp.adapter.RecentAdapter
 import com.example.recipeapp.adapter.SearchAdapter
 import com.example.recipeapp.databinding.FragmentSearchBinding
+import com.example.recipeapp.ui.recipe.RecipeFragmentArgs
 import com.example.recipeapp.ui.recipe.RecipeFragmentDirections
 import com.example.recipeapp.utils.NetworkChecker
 import com.example.recipeapp.utils.isVisible
@@ -52,6 +54,7 @@ class SearchFragment : Fragment() {
 
     //Other
     private val viewModel: SearchViewModel by viewModels()
+    private val args: SearchFragmentArgs by navArgs()
     private var isNetworkAvailable by Delegates.notNull<Boolean>()
 
 
@@ -69,10 +72,11 @@ class SearchFragment : Fragment() {
         //InitViews
         binding.apply {
 //            Keyboard listener
-            requireActivity().window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
+            val rootView = requireActivity().window.decorView
+            rootView.viewTreeObserver.addOnGlobalLayoutListener {
                 val rect = Rect()
-                requireActivity().window.decorView.getWindowVisibleDisplayFrame(rect)
-                val height = requireActivity().window.decorView.height
+                rootView.getWindowVisibleDisplayFrame(rect)
+                val height = rootView.height
                 if (height - rect.bottom <= height * 0.1399)
                     rootMotion.transitionToStart()
                 else
@@ -88,10 +92,8 @@ class SearchFragment : Fragment() {
 
             //Search
             searchEdt.addTextChangedListener { editable ->
-                val query = editable?.toString()?.trim() ?: ""
-
-                if (query.length > 2 && isNetworkAvailable ) {
-                    viewModel.setSearchQuery(query)
+                if (editable.toString().length > 2 && isNetworkAvailable ) {
+                    viewModel.setSearchQuery(editable.toString())
                     searchList.isVisible(true, emptyLay)
 
                     lifecycleScope.launch {
@@ -106,6 +108,7 @@ class SearchFragment : Fragment() {
                     }
                 }
             }
+
         }
 
 
@@ -148,21 +151,21 @@ class SearchFragment : Fragment() {
             }
         }
         //Empty
-        recentAdapter.addLoadStateListener { loadState ->
-
-            if (loadState.append.endOfPaginationReached) {
-                if (recentAdapter.itemCount < 1)
-                    binding.apply {
-                        emptyLay.visibility = View.VISIBLE
-                    }
-                else
-                    binding.apply {
-                        searchList.visibility = View.VISIBLE
-                        emptyLay.visibility = View.GONE
-                    }
-
-            }
-        }
+//        recentAdapter.addLoadStateListener { loadState ->
+//
+//            if (loadState.append.endOfPaginationReached) {
+//                if (recentAdapter.itemCount < 1)
+//                    binding.apply {
+//                        emptyLay.visibility = View.VISIBLE
+//                    }
+//                else
+//                    binding.apply {
+//                        searchList.visibility = View.VISIBLE
+//                        emptyLay.visibility = View.GONE
+//                    }
+//
+//            }
+//        }
 
     }
     private fun showToast(message: String) {
@@ -185,10 +188,23 @@ class SearchFragment : Fragment() {
     }
 
     private fun initInternetLayout(isConnected: Boolean) {
-        binding.internetLay.visibility = if (isConnected) View.GONE else View.VISIBLE
-        binding.emptyLay.visibility = View.GONE
-        binding.searchList.visibility = View.GONE
+        binding.apply {
+            internetLay.visibility = if (isConnected) View.GONE else View.VISIBLE
+
+            if (!isConnected) {
+                searchList.visibility = View.GONE
+                emptyLay.visibility = View.GONE
+            } else {
+                if (recentAdapter.itemCount < 1) {
+                    emptyLay.visibility = View.VISIBLE
+                } else {
+                    searchList.visibility = View.VISIBLE
+                    emptyLay.visibility = View.GONE
+                }
+            }
+        }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

@@ -49,7 +49,12 @@
         android:id="@+id/searchFragment"
         android:name="com.example.recipeapp.ui.search.SearchFragment"
         android:label="fragment_recipe"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="isUpdateData"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/luckyFragment"
@@ -141,5 +146,21 @@
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    <dialog
+        android:id="@+id/searchMenuFragment"
+        android:name="com.example.recipeapp.ui.menu.SearchMenuFragment"
+        android:label="fragment_search_menu"
+        tools:layout="@layout/fragment_search_menu" >
+
+        <action
+            android:id="@+id/actionMenuToSearchFragment"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/searchFragment"
+            app:popUpToInclusive="true"
+            />
+    </dialog>
+    <action
+        android:id="@+id/actionToSearchMenu"
+        app:destination="@id/searchMenuFragment" />
 
 </navigation>

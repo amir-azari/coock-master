@@ -67,7 +67,6 @@ class RecipeFragment : Fragment() {
     private val recipeViewModel: RecipeViewModel by viewModels()
     private val args: RecipeFragmentArgs by navArgs()
     private var atuScrollIndex = 0
-    private var dataSize = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,6 +130,8 @@ class RecipeFragment : Fragment() {
                         setupLoading(false, popularList)
                         binding.root.showSnackBar(response.message!!)
                     }
+
+                    else -> {}
                 }
             }
         }
