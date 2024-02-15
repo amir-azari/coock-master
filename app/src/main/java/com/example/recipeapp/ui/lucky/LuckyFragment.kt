@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.PorterDuff
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -82,6 +86,16 @@ class LuckyFragment : Fragment() {
     }
 
     private fun loadDetailDataFromApi() {
+        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val dialogShown = sharedPreferences.getBoolean("dialog_shown", false)
+
+        if (!dialogShown) {
+            showCustomDialog()
+            with(sharedPreferences.edit()) {
+                putBoolean("dialog_shown", true)
+                apply()
+            }
+        }
         binding.apply {
             viewModel.luckyData.observe(viewLifecycleOwner) { response ->
                 when (response) {
@@ -230,8 +244,22 @@ class LuckyFragment : Fragment() {
         }
     }
 
+    private fun showCustomDialog() {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+
+        dialogBuilder.setMessage("You can increase your chances for your favorite recipe by using the menu :)")
+
+        dialogBuilder.setPositiveButton("OK") { _, _ ->
+            val direction = LuckyFragmentDirections.actionToLuckyMenu()
+            findNavController().navigate(direction)
+        }
+        val dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
     private fun initInternetLayout(isConnected: Boolean) {
         binding.internetLay.isVisible = isConnected.not()
+        binding.contentLay.visibility = View.GONE
     }
 
     override fun onDestroy() {

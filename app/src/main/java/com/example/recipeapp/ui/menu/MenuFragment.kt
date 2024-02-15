@@ -1,6 +1,7 @@
 package com.example.recipeapp.ui.menu
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -76,6 +77,8 @@ class MenuFragment : BottomSheetDialogFragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isSortingSelectedLiveData = MutableLiveData(false)
+        binding.HourSlider.isEnabled = false
+        binding.MinSlider.isEnabled = false
 
         super.onViewCreated(view, savedInstanceState)
         //InitViews
@@ -161,8 +164,21 @@ class MenuFragment : BottomSheetDialogFragment() {
                 }
                 orderChipGroup.isEnabled = isSortingSelectedLiveData.value ?: false
                 orderChipGroup.clearCheck()
-            }
 
+                // Check if "time" is selected
+                if (isSortingSelectedLiveData.value == true && chipSortingTitle == "time") {
+                    binding.HourSlider.isEnabled = true
+                    binding.MinSlider.isEnabled = true
+                } else {
+                    binding.HourSlider.isEnabled = false
+                    binding.MinSlider.isEnabled = false
+
+                }
+            }
+            MaxReadyTime.setOnClickListener {
+                showSortingTimeDialog()
+
+            }
 
             //Order chips - click
             orderChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
@@ -189,12 +205,22 @@ class MenuFragment : BottomSheetDialogFragment() {
 
             //slider hour
             HourSlider.addOnChangeListener {  slider, value, fromUser ->
-                hourValue = value.toInt()
+                if (isSortingSelectedLiveData.value == true && chipSortingTitle == "time") {
+                    binding.HourSlider.isEnabled = true
+                    hourValue = value.toInt()
+                }else{
+                    binding.HourSlider.isEnabled = false
 
+                }
             }
             //slider min
             MinSlider.addOnChangeListener {  slider, value, fromUser ->
-                minValue = value.toInt()
+                if (isSortingSelectedLiveData.value == true && chipSortingTitle == "time") {
+                    binding.MinSlider.isEnabled = true
+                    minValue = value.toInt()
+                }else{
+                    binding.MinSlider.isEnabled = false
+                }
 
             }
             //Submit
@@ -212,6 +238,16 @@ class MenuFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+    private fun showSortingTimeDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+            .setMessage("Please select item (Time) from Sorting to enable sliders.")
+            .setPositiveButton("OK") { _, _ ->
+                // Handle OK button click
+            }
+            .setCancelable(false)
+            .create()
+            .show()
     }
     private fun setupChip(list: MutableList<String>, view: ChipGroup) {
         list.forEach {

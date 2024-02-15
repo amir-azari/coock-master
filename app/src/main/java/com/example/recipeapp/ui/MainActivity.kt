@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 navHost.navController.navigate(R.id.actionToSearchMenu)
             }
             if (currentFragmentId == R.id.luckyFragment) {
+
                 navHost.navController.navigate(R.id.actionToLuckyMenu)
             }
         }

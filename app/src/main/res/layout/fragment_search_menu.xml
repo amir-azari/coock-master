@@ -77,11 +77,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4mdp"
+        android:drawableRight="@drawable/baseline_announcement_24"
+        android:drawableTint="@color/yellowOrange"
+        android:drawablePadding="@dimen/_4mdp"
+
         android:text="@string/maximum_time_to_ready"
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
         app:fontPath="fonts/atlas_bold.ttf"
-        app:layout_constraintEnd_toEndOf="@+id/sortingTypeTitle"
         app:layout_constraintStart_toStartOf="@+id/sortingTypeTitle"
         app:layout_constraintTop_toBottomOf="@id/orderChipsScroll" />
 

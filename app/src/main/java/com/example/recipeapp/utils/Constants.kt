@@ -4,20 +4,21 @@ object Constants {
 
     const val BASE_URL_API1 = "https://api.spoonacular.com/"
     //Emulator Gateway = 10.0.2.2
-    const val BASE_URL_API2 = "https://10.0.2.2:8443/api/users/"
-//    const val BASE_URL_API2 = "https://192.168.137.1:8443/api/users/"
+//    const val BASE_URL_API2 = "https://10.0.2.2:8443/api/users/"
+    const val BASE_URL_API2 = "https://192.168.137.1:8443/api/users/"
     const val BASE_URL_IMAGE_INGREDIENTS = "https://spoonacular.com/cdn/ingredients_100x100/"
     const val BASE_URL_IMAGE_RECIPE = "https://spoonacular.com/recipeImages/"
     const val CONNECTION_TIME = 60L
 
 
 
-//            const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
-//        const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
+//    const val MY_API_KEY = "7fa354c2e9804b2382cf77bd76fcdb0d"
+//    const val MY_API_KEY = "82fcc55478d84819a25c948c8b9f663a"
 //    const val MY_API_KEY = "bcd815a84baf41cb92ff9cfd3d526250"
-//        const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
-    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
-//const val MY_API_KEY = "fd80793063ce4faea1e5515031576a77"
+//    const val MY_API_KEY = "75b83222e61d49e1a87047693650017a"
+//    const val MY_API_KEY = "47797d34e62d46aa867ef99fec83692f"
+//    const val MY_API_KEY = "fd80793063ce4faea1e5515031576a77"
+    const val MY_API_KEY = "407dcc52c9704291afc63f2c2a6910e5"
 
     //APIs key
     const val API_KEY = "apiKey"

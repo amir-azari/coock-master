@@ -119,6 +119,7 @@
         android:layout_marginBottom="@dimen/_20mdp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:layout_marginTop="@dimen/_15mdp"
         android:text="@string/submit"
         android:textAllCaps="false"
         android:textColor="@color/white"

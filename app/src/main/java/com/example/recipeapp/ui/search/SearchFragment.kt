@@ -92,7 +92,7 @@ class SearchFragment : Fragment() {
 
             //Search
             searchEdt.addTextChangedListener { editable ->
-                if (editable.toString().length > 2 && isNetworkAvailable ) {
+                if (editable.toString().length > 2 && isNetworkAvailable) {
                     viewModel.setSearchQuery(editable.toString())
                     searchList.isVisible(true, emptyLay)
 
@@ -150,27 +150,28 @@ class SearchFragment : Fragment() {
 
             }
         }
-        //Empty
-//        recentAdapter.addLoadStateListener { loadState ->
-//
-//            if (loadState.append.endOfPaginationReached) {
-//                if (recentAdapter.itemCount < 1)
-//                    binding.apply {
-//                        emptyLay.visibility = View.VISIBLE
-//                    }
-//                else
-//                    binding.apply {
-//                        searchList.visibility = View.VISIBLE
-//                        emptyLay.visibility = View.GONE
-//                    }
-//
-//            }
-//        }
+        recentAdapter.addLoadStateListener { loadState ->
+
+            if (loadState.append.endOfPaginationReached) {
+                if (recentAdapter.itemCount < 1)
+                    binding.apply {
+                        emptyLay.visibility = View.VISIBLE
+                    }
+                else
+                    binding.apply {
+                        searchList.visibility = View.VISIBLE
+                        emptyLay.visibility = View.GONE
+                    }
+
+            }
+        }
 
     }
+
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
     private fun initRecentRecycler() {
         binding.searchList.setupRecyclerView(
             LinearLayoutManager(requireContext()),
@@ -192,17 +193,12 @@ class SearchFragment : Fragment() {
             internetLay.visibility = if (isConnected) View.GONE else View.VISIBLE
 
             if (!isConnected) {
+                // Hide searchList when internet is not available
                 searchList.visibility = View.GONE
                 emptyLay.visibility = View.GONE
-            } else {
-                if (recentAdapter.itemCount < 1) {
-                    emptyLay.visibility = View.VISIBLE
-                } else {
-                    searchList.visibility = View.VISIBLE
-                    emptyLay.visibility = View.GONE
-                }
             }
         }
+
     }
 
 
