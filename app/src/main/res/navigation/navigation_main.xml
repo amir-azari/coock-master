@@ -162,5 +162,20 @@
     <action
         android:id="@+id/actionToSearchMenu"
         app:destination="@id/searchMenuFragment" />
+    <dialog
+        android:id="@+id/luckyMenuFragment"
+        android:name="com.example.recipeapp.ui.menu.LuckyMenuFragment"
+        android:label="fragment_lucky_menu"
+        tools:layout="@layout/fragment_lucky_menu" >
+        <action
+            android:id="@+id/actionMenuToLuckyFragment"
+            app:destination="@id/luckyFragment"
+            app:popUpTo="@id/luckyFragment"
+            app:popUpToInclusive="true"
+            />
+    </dialog>
+    <action
+        android:id="@+id/actionToLuckyMenu"
+        app:destination="@id/luckyMenuFragment" />
 
 </navigation>

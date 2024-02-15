@@ -56,9 +56,9 @@ class MainActivity : AppCompatActivity() {
             if (currentFragmentId == R.id.searchFragment) {
                 navHost.navController.navigate(R.id.actionToSearchMenu)
             }
-//            if (currentFragmentId == R.id.luckyFragment) {
-//                navHost.navController.navigate(R.id.actionToMenu)
-//            }
+            if (currentFragmentId == R.id.luckyFragment) {
+                navHost.navController.navigate(R.id.actionToLuckyMenu)
+            }
         }
     }
 

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.menu.SearchMenuFragment">
-
-    <!--sorting-->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.menu.LuckyMenuFragment">
+    <!--Cuisine type-->
     <TextView
-        android:id="@+id/sortingTypeTitle"
+        android:id="@+id/cuisineTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10mdp"
-        android:text="@string/sorting"
+        android:text="@string/cuisine_type"
+        app:fontPath="fonts/atlas_bold.ttf"
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
-        app:fontPath="fonts/atlas_bold.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"  />
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--Cuisine chips-->
     <HorizontalScrollView
-        android:id="@+id/sortingChipsScroll"
+        android:id="@+id/cuisineChipsScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_1mdp"
@@ -28,72 +28,87 @@
         android:fadingEdge="horizontal"
         android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/sortingTypeTitle">
+        app:layout_constraintTop_toBottomOf="@id/cuisineTypeTitle">
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/sortingChipGroup"
+            android:id="@+id/cuisineChipGroup"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/_5mdp"
-            app:chipSpacing="0dp"
             app:singleLine="true"
             app:singleSelection="true" />
-
     </HorizontalScrollView>
+    <!--Meal type-->
+    <TextView
+        android:id="@+id/mealTypeTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:fontPath="fonts/atlas_bold.ttf"
+        android:layout_marginTop="@dimen/_4mdp"
+        android:text="@string/meal_types"
+        android:textColor="@color/jacarta"
+        android:textSize="@dimen/_12font_mdp"
+        app:layout_constraintEnd_toEndOf="@id/cuisineTypeTitle"
+        app:layout_constraintStart_toStartOf="@+id/cuisineTypeTitle"
+        app:layout_constraintTop_toBottomOf="@+id/cuisineChipsScroll" />
 
     <HorizontalScrollView
-        android:id="@+id/orderChipsScroll"
+        android:id="@+id/mealChipsScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_1mdp"
         android:clipToPadding="false"
         android:fadingEdge="horizontal"
-        android:layout_marginTop="@dimen/mines8mdp"
         android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/sortingChipsScroll">
+        app:layout_constraintTop_toBottomOf="@id/mealTypeTitle">
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/orderChipGroup"
+            android:id="@+id/mealChipGroup"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/_5mdp"
-            app:chipSpacing="0dp"
             app:singleLine="true"
             app:singleSelection="true" />
     </HorizontalScrollView>
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/HourSlider"
-        android:layout_width="@dimen/_280mdp"
-        android:layout_height="wrap_content"
-        android:stepSize="1"
-        android:valueFrom="0"
-        android:valueTo="12"
-        app:layout_constraintStart_toStartOf="@+id/MaxReadyTime"
-        app:layout_constraintTop_toBottomOf="@+id/MaxReadyTime" />
-
+    <!--sorting-->
     <TextView
-        android:id="@+id/MaxReadyTime"
+        android:id="@+id/dietTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4mdp"
-        android:text="@string/maximum_time_to_ready"
+        android:text="@string/diets_type"
+        app:fontPath="fonts/atlas_bold.ttf"
+
         android:textColor="@color/jacarta"
         android:textSize="@dimen/_12font_mdp"
-        app:fontPath="fonts/atlas_bold.ttf"
-        app:layout_constraintEnd_toEndOf="@+id/sortingTypeTitle"
-        app:layout_constraintStart_toStartOf="@+id/sortingTypeTitle"
-        app:layout_constraintTop_toBottomOf="@id/orderChipsScroll" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/MinSlider"
-        android:layout_width="@dimen/_280mdp"
+        app:layout_constraintEnd_toEndOf="@id/mealTypeTitle"
+        app:layout_constraintStart_toStartOf="@id/mealTypeTitle"
+        app:layout_constraintTop_toBottomOf="@id/mealChipsScroll" />
+    <!--Diets chips-->
+    <HorizontalScrollView
+        android:id="@+id/dietChipsScroll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stepSize="1"
-        android:valueFrom="0"
-        android:valueTo="59"
-        app:layout_constraintStart_toStartOf="@+id/HourSlider"
-        app:layout_constraintTop_toBottomOf="@+id/HourSlider" />
+        android:layout_marginTop="@dimen/_1mdp"
+        android:clipToPadding="false"
+        android:fadingEdge="horizontal"
+        android:requiresFadingEdge="horizontal"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/dietTypeTitle">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/dietChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_5mdp"
+            app:chipSpacing="0dp"
+            app:singleLine="true"
+            app:singleSelection="true" />
+    </HorizontalScrollView>
+
     <!--Submit-->
 
     <com.google.android.material.button.MaterialButton
@@ -102,7 +117,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10mdp"
         android:layout_marginBottom="@dimen/_20mdp"
-        android:layout_marginTop="@dimen/_15mdp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/submit"
@@ -112,10 +126,8 @@
         app:backgroundTint="@color/yellowOrange"
         app:cornerRadius="@dimen/_8mdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MinSlider"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/dietChipsScroll"
         tools:layout_editor_absoluteX="-9dp" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

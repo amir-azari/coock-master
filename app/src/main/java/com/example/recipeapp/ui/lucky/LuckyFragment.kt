@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -56,7 +57,11 @@ class LuckyFragment : Fragment() {
     //Other
     private val viewModel: LuckyViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentLuckyBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -83,12 +88,18 @@ class LuckyFragment : Fragment() {
                     is NetworkRequest.Loading -> {
                         loading.isVisible(true, contentLay)
                     }
+
                     is NetworkRequest.Success -> {
                         loading.isVisible(false, contentLay)
                         response.data?.let { data ->
-                            initViewsWithData(data.recipes!![0])
+                            if (data.recipes.isNullOrEmpty()) {
+                                emptyLay.isVisible(true, contentLay)
+                            } else {
+                                initViewsWithData(data.recipes[0])
+                            }
                         }
                     }
+
                     is NetworkRequest.Error -> {
                         loading.isVisible(false, contentLay)
                         binding.root.showSnackBar(response.message!!)
@@ -98,17 +109,29 @@ class LuckyFragment : Fragment() {
         }
     }
 
+
     @SuppressLint("SetTextI18n")
     private fun initViewsWithData(data: ResponseLucky.Recipe) {
         binding.apply {
             //Image
-            val imageSplit = data.image!!.split("-")
-            val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
-            coverImg.load("${imageSplit[0]}-$imageSize") {
-                crossfade(true)
-                crossfade(800)
-                memoryCachePolicy(CachePolicy.ENABLED)
-                error(R.drawable.ic_placeholder)
+            data.image?.let {
+                val imageSplit = it.split("-")
+                val imageSize = imageSplit.getOrNull(1)
+                    ?.replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
+                imageSize?.let { size ->
+                    coverImg.load("${imageSplit[0]}-$size") {
+                        crossfade(true)
+                        crossfade(800)
+                        memoryCachePolicy(CachePolicy.ENABLED)
+                        error(R.drawable.ic_placeholder)
+                    }
+                } ?: run {
+                    coverImg.load(R.drawable.ic_placeholder) {
+                        crossfade(true)
+                        crossfade(800)
+                        memoryCachePolicy(CachePolicy.ENABLED)
+                    }
+                }
             }
             //Source
             data.sourceUrl?.let { source ->
@@ -142,15 +165,25 @@ class LuckyFragment : Fragment() {
                 in 0..59 -> healthyTxt.setDynamicallyColor(R.color.tart_orange)
             }
             //Instructions
-            instructionsCount.text = "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
-            val instructions = HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            instructionsCount.text =
+                "${data.extendedIngredients!!.size} ${getString(R.string.items)}"
+            val instructions =
+                HtmlCompat.fromHtml(data.instructions!!, HtmlCompat.FROM_HTML_MODE_COMPACT)
             instructionsDesc.text = instructions
             initInstructionsList(data.extendedIngredients.toMutableList())
             //Steps
-            initStepsList(data.analyzedInstructions!![0].steps!!.toMutableList())
+            data.analyzedInstructions?.let { instructions ->
+                if (instructions.isNotEmpty()) {
+                    initStepsList(instructions[0].steps!!.toMutableList())
+                } else {
+                    Toast.makeText(requireContext(), "steps", Toast.LENGTH_SHORT)
+                }
+            }
             stepsShowMore.setOnClickListener {
-                val direction = DetailFragmentDirections.actionDetailToSteps(data.analyzedInstructions[0])
-                findNavController().navigate(direction)
+                data.analyzedInstructions?.takeIf { it.isNotEmpty() }?.let { instructions ->
+                    val direction = DetailFragmentDirections.actionDetailToSteps(instructions[0])
+                    findNavController().navigate(direction)
+                }
             }
             //Diets
             setupChip(data.diets!!.toMutableList(), dietsChipGroup)
@@ -188,7 +221,8 @@ class LuckyFragment : Fragment() {
     private fun setupChip(list: MutableList<String>, view: ChipGroup) {
         list.forEach {
             val chip = Chip(requireContext())
-            val drawable = ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.DietsChip)
+            val drawable =
+                ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.DietsChip)
             chip.setChipDrawable(drawable)
             chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.darkGray))
             chip.text = it

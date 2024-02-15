@@ -45,7 +45,7 @@
     <string name="already_a_member_sing_in">Already A Member? Login</string>
     <string name="cuisine_type">Cuisine Type</string>
     <string name="sorting">Sorting</string>
-    <string name="maximum_time_to_ready">maximum time to ready</string>
+    <string name="maximum_time_to_ready">Time to ready</string>
     <string name="retry">Retry</string>
 
 

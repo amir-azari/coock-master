@@ -161,13 +161,17 @@ class DetailFragment : Fragment() {
                 if (isExistsFavorite) deleteFavorite(data) else saveFavorite(data)
             }
             //Image
-            val imageSplit = data.image!!.split("-")
-            val imageSize = imageSplit[1].replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
-            coverImg.load("${imageSplit[0]}-$imageSize") {
-                crossfade(true)
-                crossfade(800)
-                memoryCachePolicy(CachePolicy.ENABLED)
-                error(R.drawable.ic_placeholder)
+            data.image?.let {
+                val imageSplit = it.split("-")
+                val imageSize = imageSplit.getOrNull(1)?.replace(Constants.OLD_IMAGE_SIZE, Constants.NEW_IMAGE_SIZE)
+                imageSize?.let { size ->
+                    coverImg.load("${imageSplit[0]}-$size") {
+                        crossfade(true)
+                        crossfade(800)
+                        memoryCachePolicy(CachePolicy.ENABLED)
+                        error(R.drawable.ic_placeholder)
+                    }
+                }
             }
             //Source
             data.sourceUrl?.let { source ->
