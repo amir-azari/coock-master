@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topLay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_160mdp"
+        android:background="@color/yellowOrange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40mdp"
+            android:gravity="center"
+            android:text="@string/profile"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16font_mdp"
+            android:textStyle="bold"
+            app:fontPath="fonts/atlas_bold.ttf"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+        android:id="@+id/circularRevealCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20mdp"
+        android:backgroundTint="@color/white"
+        android:elevation="@dimen/_26mdp"
+        app:cardCornerRadius="@dimen/_8mdp"
+        app:cardElevation="@dimen/_26mdp"
+        app:layout_constraintBottom_toBottomOf="@id/topLay"
+        app:layout_constraintEnd_toEndOf="@id/topLay"
+        app:layout_constraintStart_toStartOf="@id/topLay"
+        app:layout_constraintTop_toBottomOf="@id/topLay">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/profileImg"
+                android:layout_width="@dimen/_90mdp"
+                android:layout_height="@dimen/_90mdp"
+                android:elevation="@dimen/_26mdp"
+                android:padding="@dimen/_10mdp"
+                android:src="@drawable/ic_circle_user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/gray" />
+
+            <TextView
+                android:id="@+id/fNamelNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/_14font_mdp"
+                android:textStyle="bold"
+                app:fontPath="fonts/atlas_bold.ttf"
+                app:layout_constraintTop_toBottomOf="@+id/profileImg"
+                tools:text="Amir Azari" />
+
+            <TextView
+                android:id="@+id/usernameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_10mdp"
+                android:textSize="@dimen/_12font_mdp"
+                app:layout_constraintTop_toBottomOf="@+id/fNamelNameTxt"
+                tools:text="AmirAz" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/itemLay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_26mdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingHorizontal="@dimen/_10mdp"
+        app:layout_constraintTop_toBottomOf="@+id/circularRevealCardView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/editeInfLay"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_4mdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/editeImgLay"
+                android:layout_width="@dimen/_35mdp"
+                android:layout_height="@dimen/_35mdp"
+                android:backgroundTint="@color/yellowOrange"
+                app:cardCornerRadius="@dimen/_50mdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_edit_24"
+                    app:tint="@color/white" />
+
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edite_information"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:layout_marginEnd="@dimen/_20mdp"
+                app:fontPath="fonts/atlas_bold.ttf"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="@dimen/_80mdp"
+                android:textSize="@dimen/_14font_mdp"
+                app:layout_constraintStart_toEndOf="@+id/editeImgLay"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
+                android:drawableTint="@color/gray"
+                app:drawableEndCompat="@drawable/baseline_arrow_forward_ios_24" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/changePasswordLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:padding="@dimen/_4mdp"
+            app:layout_constraintTop_toBottomOf="@+id/editeInfLay"
+            tools:layout_editor_absoluteX="13dp">
+
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/changePasswordImgLay"
+                android:layout_width="@dimen/_35mdp"
+                android:layout_height="@dimen/_35mdp"
+                android:backgroundTint="@color/yellowOrange"
+                app:cardCornerRadius="@dimen/_50mdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_password_24"
+                    app:tint="@color/white" />
+
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_80mdp"
+                android:text="@string/change_password"
+                android:textSize="@dimen/_14font_mdp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:layout_marginEnd="@dimen/_20mdp"
+                app:fontPath="fonts/atlas_bold.ttf"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/changePasswordImgLay"
+                app:layout_constraintTop_toTopOf="parent"
+                app:drawableEndCompat="@drawable/baseline_arrow_forward_ios_24"
+                android:drawableTint="@color/gray"
+                android:focusable="true" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/logOutLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8mdp"
+            android:padding="@dimen/_4mdp"
+            app:layout_constraintTop_toBottomOf="@+id/changePasswordLay"
+            tools:layout_editor_absoluteX="13dp">
+
+            <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/logOutImgLay"
+                android:layout_width="@dimen/_35mdp"
+                android:layout_height="@dimen/_35mdp"
+                android:backgroundTint="@color/yellowOrange"
+                app:cardCornerRadius="@dimen/_50mdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_20mdp"
+                    android:layout_height="@dimen/_20mdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_logout_24"
+                    app:tint="@color/white" />
+
+            </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_80mdp"
+                android:text="@string/logout"
+                android:textSize="@dimen/_14font_mdp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:layout_marginEnd="@dimen/_20mdp"
+                app:fontPath="fonts/atlas_bold.ttf"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/logOutImgLay"
+                app:layout_constraintTop_toTopOf="parent"
+                app:drawableEndCompat="@drawable/baseline_arrow_forward_ios_24"
+                android:drawableTint="@color/gray"
+
+                android:focusable="true" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topLay">
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

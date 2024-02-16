@@ -5,6 +5,7 @@ import com.example.recipeapp.models.detail.ResponseSimilar
 import com.example.recipeapp.models.login.BodyLogin
 import com.example.recipeapp.models.login.ResponseLogin
 import com.example.recipeapp.models.lucky.ResponseLucky
+import com.example.recipeapp.models.profile.ResponseProfile
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.register.BodyRegister
 import com.example.recipeapp.models.register.ResponseRegister
@@ -24,6 +25,8 @@ interface ApiServices {
     suspend fun postRegister(@Body body: BodyRegister): Response<ResponseRegister>
     @POST("login")
     suspend fun postLogin(@Body body: BodyLogin): Response<ResponseLogin>
+    @GET("information/{username}")
+    suspend fun getUserInfo(@Path("username") username : String): Response<ResponseProfile>
 
 
 

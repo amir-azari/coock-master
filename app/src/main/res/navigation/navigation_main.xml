@@ -43,6 +43,9 @@
             android:name="isUpdateData"
             android:defaultValue="false"
             app:argType="boolean" />
+        <action
+            android:id="@+id/actionRecipeFragmentToProfileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -177,5 +180,14 @@
     <action
         android:id="@+id/actionToLuckyMenu"
         app:destination="@id/luckyMenuFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.recipeapp.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="username"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -28,13 +29,16 @@ import com.example.recipeapp.data.SessionManager
 import com.example.recipeapp.databinding.FragmentRecipeBinding
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.recipe.ResponseRecipes.Result
+import com.example.recipeapp.ui.menu.MenuFragmentDirections
 import com.example.recipeapp.utils.Constants
+import com.example.recipeapp.utils.NetworkChecker
 import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.isVisible
 import com.example.recipeapp.utils.onceObserve
 import com.example.recipeapp.utils.setupRecyclerView
 import com.example.recipeapp.utils.showSnackBar
 import com.example.recipeapp.viewmodel.LoginViewModel
+import com.example.recipeapp.viewmodel.ProfileViewModel
 import com.example.recipeapp.viewmodel.RecipeViewModel
 import com.example.recipeapp.viewmodel.RegisterViewModel
 import com.todkars.shimmer.ShimmerRecyclerView
@@ -44,6 +48,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,10 +68,15 @@ class RecipeFragment : Fragment() {
     @Inject
     lateinit var sessionManager: SessionManager
 
+    @Inject
+    lateinit var networkChecker : NetworkChecker
+
     //Other
     private val recipeViewModel: RecipeViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
     private val args: RecipeFragmentArgs by navArgs()
     private var atuScrollIndex = 0
+    private var token = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +89,13 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch{
+            token = sessionManager.getToken.first().toString()
+        }
+
+        binding.avatarImg.setOnClickListener {
+            findNavController().navigate(RecipeFragmentDirections.actionRecipeFragmentToProfileFragment(token))
+        }
         //Show username
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -89,10 +106,61 @@ class RecipeFragment : Fragment() {
         //Call data
         callPopularData()
         callRecentData()
+        callProfileData()
         //Load data
         loadPopularData()
+        loadProfileData()
     }
+    //---Profile---
+    private fun callProfileData(){
+        profileViewModel.readProfileStoredItems.asLiveData().onceObserve(viewLifecycleOwner){
+            if (it.firstname.isNullOrEmpty() && it.username.isNullOrEmpty() && it.lastname.isNullOrEmpty() ){
+                profileViewModel.callInformationApi(token)
+            }
+        }
+    }
+    private fun loadProfileData() {
 
+        binding.apply {
+
+            profileViewModel.profileData.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is NetworkRequest.Loading -> {
+                    }
+
+                    is NetworkRequest.Success -> {
+                        response.data?.let { data ->
+                            if (data.data != null){
+                                lifecycleScope.launchWhenStarted {
+                                    networkChecker.checkNetworkAvailability().collect { state ->
+                                        if (state){
+                                            data.data.lastName?.let {
+                                                data.data.username?.let { it1 ->
+                                                    data.data.firstName?.let { it2 ->
+                                                        profileViewModel.saveToStore(
+                                                            it1, it2, it
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    is NetworkRequest.Error -> {
+                        binding.root.showSnackBar(response.message!!)
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
     //---Popular---
     private fun callPopularData() {
         initPopularRecycler()
@@ -111,6 +179,8 @@ class RecipeFragment : Fragment() {
     private fun loadPopularData() {
 
         binding.apply {
+
+
             recipeViewModel.popularData.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is NetworkRequest.Loading -> {

@@ -47,7 +47,10 @@
     <string name="sorting">Sorting</string>
     <string name="maximum_time_to_ready">Time to ready</string>
     <string name="retry">Retry</string>
-
+    <string name="profile">PROFILE</string>
+    <string name="edite_information">Edite Information</string>
+    <string name="change_password">Change Password</string>
+    <string name="logout">Logout</string>
 
 
 </resources>

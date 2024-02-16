@@ -13,6 +13,7 @@ class RemoteDataSource @Inject constructor(
     //Api2
     suspend fun postRegister(body: BodyRegister) = api2.postRegister(body)
     suspend fun postLogin(body: BodyLogin) = api2.postLogin(body)
+    suspend fun getUserInfo(username: String) = api2.getUserInfo(username)
 
     //Api1
     suspend fun getRecipes(queries: Map<String, String>) = api1.getRecipes(queries)

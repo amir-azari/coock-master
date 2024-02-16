@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> visibilityBottomMenu(false)
                 R.id.webViewFragment -> visibilityBottomMenu(false)
                 R.id.loginFragment -> visibilityBottomMenu(false)
+                R.id.profileFragment -> visibilityBottomMenu(false)
                 else -> visibilityBottomMenu(true)
 
             }

@@ -73,6 +73,7 @@ object Constants {
     const val SEARCH_MENU_ORDER_ID_KEY = "search_menu_order_id_key"
     const val SEARCH_MENU_HOUR_KEY = "search_menu_hour_key"
     const val SEARCH_MENU_MINUTE_KEY = "search_menu_minute_key"
+
     //Menu datastore
     const val LUCKY_MENU_DATASTORE = "lucky_menu_datastore"
     const val LUCKY_MENU_MEAL_TITLE_KEY = "lucky_menu_meal_title_key"
@@ -81,6 +82,13 @@ object Constants {
     const val LUCKY_MENU_DIET_ID_KEY = "lucky_menu_diet_id_key"
     const val LUCKY_MENU_CUISINE_TITLE_KEY = "lucky_menu_cuisine_title_key"
     const val LUCKY_MENU_CUISINE_ID_KEY = "lucky_menu_cuisine_id_key"
+
+    //Profile datastore
+    const val PROFILE_DATASTORE = "profile_datastore"
+    const val PROFILE_USERNAME_DATASTORE = "profile_username_datastore"
+    const val PROFILE_FIRSTNAME_DATASTORE = "profile_firstname_datastore"
+    const val PROFILE_LASTNAME_DATASTORE = "profile_lastname_datastore"
+
     //Database
     const val RECIPE_TABLE_NAME = "recipe_table_name"
     const val RECENT_RECIPE_TABLE_NAME = "recent_recipe_table_name"
