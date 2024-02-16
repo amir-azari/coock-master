@@ -122,6 +122,7 @@
             </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
             <TextView
+                android:id="@+id/editeBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/edite_information"

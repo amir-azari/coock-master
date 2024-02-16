@@ -51,6 +51,7 @@
     <string name="edite_information">Edite Information</string>
     <string name="change_password">Change Password</string>
     <string name="logout">Logout</string>
+    <string name="personal">Personal</string>
 
 
 </resources>

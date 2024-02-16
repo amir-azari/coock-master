@@ -52,7 +52,13 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         binding.apply {
+            editeBtn.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditeFragment())
+            }
+
             viewModel.readProfileStoredItems.asLiveData().onceObserve(viewLifecycleOwner){
                 usernameTxt.text = "@${it.username}"
                 fNamelNameTxt.text = "${it.firstname} ${it.lastname}"

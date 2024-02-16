@@ -2,6 +2,7 @@ package com.example.recipeapp.data.source
 
 import com.example.recipeapp.data.network.ApiServices
 import com.example.recipeapp.models.login.BodyLogin
+import com.example.recipeapp.models.profile.BodyEditeInfo
 import com.example.recipeapp.models.register.BodyRegister
 import javax.inject.Inject
 import javax.inject.Named
@@ -14,6 +15,7 @@ class RemoteDataSource @Inject constructor(
     suspend fun postRegister(body: BodyRegister) = api2.postRegister(body)
     suspend fun postLogin(body: BodyLogin) = api2.postLogin(body)
     suspend fun getUserInfo(username: String) = api2.getUserInfo(username)
+    suspend fun editeUserInfo(username: String , body : BodyEditeInfo) = api2.editeUserInfo(username , body)
 
     //Api1
     suspend fun getRecipes(queries: Map<String, String>) = api1.getRecipes(queries)

@@ -5,6 +5,7 @@ import com.example.recipeapp.models.detail.ResponseSimilar
 import com.example.recipeapp.models.login.BodyLogin
 import com.example.recipeapp.models.login.ResponseLogin
 import com.example.recipeapp.models.lucky.ResponseLucky
+import com.example.recipeapp.models.profile.BodyEditeInfo
 import com.example.recipeapp.models.profile.ResponseProfile
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.register.BodyRegister
@@ -14,6 +15,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
@@ -28,6 +30,8 @@ interface ApiServices {
     @GET("information/{username}")
     suspend fun getUserInfo(@Path("username") username : String): Response<ResponseProfile>
 
+    @PUT("editeInfo/{username}")
+    suspend fun editeUserInfo(@Path("username") username : String , @Body body: BodyEditeInfo): Response<ResponseProfile>
 
 
     // BASE_URL_API1 endpoints
