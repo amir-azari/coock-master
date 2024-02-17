@@ -78,12 +78,6 @@ class RecipeFragment : Fragment() {
     private var atuScrollIndex = 0
     private var token = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycleScope.launch{
-            token = sessionManager.getToken.first().toString()
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,18 +89,18 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch{
-            token = sessionManager.getToken.first().toString()
+        lifecycleScope.launch {
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    token = sessionManager.getToken.first().toString()
+                    Log.d("TokenLog", token.toString())
+                    showUsername()
+                }
+            }
         }
 
         binding.avatarImg.setOnClickListener {
             findNavController().navigate(RecipeFragmentDirections.actionToProfileFragment(token))
-        }
-        //Show username
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                showUsername()
-            }
         }
 
         //Call data
@@ -366,6 +360,7 @@ class RecipeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     suspend fun showUsername() {
         val token = sessionManager.getToken.first()
+        Log.d("TokenLog" , token.toString())
         if (!token.isNullOrEmpty()) {
             binding.usernameTxt.text =
                 "${getString(R.string.hello)} , $token ${gttEmojiByUnicode()}"

@@ -13,6 +13,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.room.Room
 import com.example.recipeapp.R
 import com.example.recipeapp.data.SessionManager
 import com.example.recipeapp.data.database.RecipeAppDatabase
@@ -41,10 +42,7 @@ class ProfileFragment : Fragment() {
 
     //Other
     private val viewModel: ProfileViewModel by viewModels()
-    private val searchMenuViewModel: SearchMenuViewModel by viewModels()
-    private val menuViewModel: MenuViewModel by viewModels()
-    private val luckyMenuViewModel: LuckyMenuViewModel by viewModels()
-    private val args: ProfileFragmentArgs by navArgs()
+
 
 
     override fun onCreateView(
@@ -73,15 +71,10 @@ class ProfileFragment : Fragment() {
                 builder.setTitle("Log out")
                     .setMessage("Are you sure you can log out???")
                     .setPositiveButton("Yes") { _, _ ->
-
-//                        viewModel.clear
+                        findNavController().navigate(R.id.registerFragment)
                         lifecycleScope.launch {
-//                            viewModel.clear()
-//                            luckyMenuViewModel.clear()
-//                            menuViewModel.clear()
-//                            searchMenuViewModel.clear()
-//                            sessionManager.clearToken()
-                            findNavController().navigate(R.id.registerFragment)
+                            sessionManager.logout()
+                            sessionManager.clearToken()
                         }
                     }
                     .setNegativeButton("No") { dialog, _ ->
@@ -99,7 +92,16 @@ class ProfileFragment : Fragment() {
         }
 
     }
+    private fun clearDatabase() {
+        val db = Room.databaseBuilder(
+            requireContext(),
+            RecipeAppDatabase::class.java, "recipe_app_database"
+        ).build()
 
+        // Clear all tables in the database
+        db.clearAllTables()
+        db.close()
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

@@ -177,10 +177,12 @@ class LoginFragment : Fragment() {
                     response.data?.data.let { data ->
                         if (data!!.username!!.isNotEmpty()){
                             lifecycleScope.launch{
+
                                 sessionManager.saveToken(data.username!!)
+                                findNavController().popBackStack(R.id.registerFragment, true)
+                                findNavController().navigate(LoginFragmentDirections.actionToRecipe())
                             }
-                            findNavController().popBackStack(R.id.registerFragment, true)
-                            findNavController().navigate(LoginFragmentDirections.actionToRecipe())
+
 
                         }
 

@@ -102,4 +102,9 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
             )
         }
 
+    suspend fun clearMenuData() {
+        context.datastore.edit {
+            it.clear()
+        }
+    }
 }

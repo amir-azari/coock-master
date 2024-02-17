@@ -72,10 +72,9 @@ class SearchMenuRepository @Inject constructor(@ApplicationContext private val c
             SearchMenuStoredModel(selectSorting, selectSortingId, selectOrder, selectOrderId, selectHour, selectMinute)
         }
 
-
     suspend fun clearMenuData() {
-        context.datastore.edit { preferences ->
-            preferences.clear()
+        context.datastore.edit {
+            it.clear()
         }
     }
 }

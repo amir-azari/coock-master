@@ -77,4 +77,10 @@ class LuckyMenuRepository @Inject constructor(@ApplicationContext private val co
                 selectCuisine, selectCuisineId
             )
         }
+
+    suspend fun clearMenuData() {
+        context.datastore.edit {
+            it.clear()
+        }
+    }
 }

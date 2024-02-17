@@ -70,7 +70,10 @@ class ProfileRepository @Inject constructor(
             ProfileStoredModel(username, firstName, lastName)
         }
 
-
-
+    suspend fun clearProfileData() {
+        context.datastore.edit {
+            it.clear()
+        }
+    }
 
 }
