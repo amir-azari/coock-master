@@ -1,5 +1,6 @@
 package com.example.recipeapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,6 @@ class EditeInfoViewModel @Inject constructor(private val repository: EditeInform
 
         val response = repository.editeUserInfo(username, body)
         editeData.value = NetworkResponse(response).generalNetworkResponse()
-
     }
 
 

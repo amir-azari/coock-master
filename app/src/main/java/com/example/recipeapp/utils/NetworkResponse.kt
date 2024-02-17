@@ -14,7 +14,16 @@ open class NetworkResponse<T>(private val response: Response<T>) {
             response.code() == 500 -> NetworkRequest.Error("Try again!")
             response.code() == 409 -> NetworkRequest.Error("Username already exists")
             response.isSuccessful -> NetworkRequest.Success(response.body()!!)
-            else -> NetworkRequest.Error(response.message())
+            else -> NetworkRequest.Error(response.message().toString())
+        }
+    }
+
+    fun changePassNetworkResponse() : NetworkRequest<T> {
+        return when {
+            response.code() == 400 -> NetworkRequest.Error("New password must be different from the old password")
+            response.code() == 401 -> NetworkRequest.Error("Incorrect old password")
+            response.isSuccessful -> NetworkRequest.Success(response.body()!!)
+            else -> NetworkRequest.Error(response.message().toString())
         }
     }
 }

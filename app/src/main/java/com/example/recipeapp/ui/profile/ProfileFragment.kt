@@ -58,6 +58,9 @@ class ProfileFragment : Fragment() {
             editeBtn.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditeFragment())
             }
+            changePassBtn.setOnClickListener {
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToChnagePasswordFragment())
+            }
 
             viewModel.readProfileStoredItems.asLiveData().onceObserve(viewLifecycleOwner){
                 usernameTxt.text = "@${it.username}"

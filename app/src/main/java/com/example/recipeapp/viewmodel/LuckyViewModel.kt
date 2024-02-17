@@ -56,5 +56,6 @@ class LuckyViewModel @Inject constructor(private val repository: LuckyRepository
         luckyData.value = NetworkRequest.Loading()
         val response = repository.getRandomRecipe(queries)
         luckyData.value = NetworkResponse(response).generalNetworkResponse()
+
     }
 }

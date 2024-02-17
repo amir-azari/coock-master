@@ -46,10 +46,9 @@
 
     </fragment>
     <action
-        android:id="@+id/actionRecipeFragmentToProfileFragment"
+        android:id="@+id/actionToProfileFragment"
         app:destination="@id/profileFragment"
-        app:popUpTo="@id/searchFragment"
-        app:popUpToInclusive="true"
+
         />
     <fragment
         android:id="@+id/searchFragment"
@@ -193,12 +192,26 @@
             app:argType="string" />
         <action
             android:id="@+id/actionProfileFragmentToEditeFragment"
-            app:destination="@id/editeInformationFragment" />
+            app:destination="@id/editeInformationFragment"
+            app:popUpTo="@id/editeInformationFragment"
+            app:popUpToInclusive="true"
+            />
+        <action
+            android:id="@+id/actionProfileFragmentToChnagePasswordFragment"
+            app:destination="@id/changePasswordFragment"
+            app:popUpTo="@id/changePasswordFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
     <dialog
         android:id="@+id/editeInformationFragment"
         android:name="com.example.recipeapp.ui.profile.edite.EditeInformationFragment"
         android:label="fragment_edite_information"
         tools:layout="@layout/fragment_edite_information" />
+    <dialog
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.recipeapp.ui.profile.password.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
 
 </navigation>

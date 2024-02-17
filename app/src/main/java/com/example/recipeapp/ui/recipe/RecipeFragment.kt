@@ -94,7 +94,7 @@ class RecipeFragment : Fragment() {
         }
 
         binding.avatarImg.setOnClickListener {
-            findNavController().navigate(RecipeFragmentDirections.actionRecipeFragmentToProfileFragment(token))
+            findNavController().navigate(RecipeFragmentDirections.actionToProfileFragment(token))
         }
         //Show username
         lifecycleScope.launch {

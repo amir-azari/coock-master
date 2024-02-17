@@ -1,8 +1,6 @@
 package com.example.recipeapp.ui.profile.edite
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +16,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.recipeapp.R
 import com.example.recipeapp.data.SessionManager
 import com.example.recipeapp.databinding.FragmentEditeInformationBinding
-import com.example.recipeapp.databinding.FragmentLoginBinding
-import com.example.recipeapp.models.login.BodyLogin
 import com.example.recipeapp.models.profile.BodyEditeInfo
 import com.example.recipeapp.utils.NetworkChecker
 import com.example.recipeapp.utils.NetworkRequest
 import com.example.recipeapp.utils.onceObserve
 import com.example.recipeapp.utils.showSnackBar
 import com.example.recipeapp.viewmodel.EditeInfoViewModel
-import com.example.recipeapp.viewmodel.LoginViewModel
 import com.example.recipeapp.viewmodel.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,10 +51,6 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
     private var newFirstname = ""
     private var newLastname = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -140,12 +130,12 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
                 }
             }
         }
-        loadRegisterData()
+        loadData()
     }
 
 
 
-    private fun loadRegisterData() {
+    private fun loadData() {
         editeInfoViewModel.editeData.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkRequest.Loading -> {
@@ -159,7 +149,10 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
 
                             sessionManager.saveToken(newUsername)
                         }
-                        findNavController().navigate(R.id.actionRecipeFragmentToProfileFragment)
+                        findNavController().popBackStack(R.id.profileFragment, true)
+                        findNavController().navigate(R.id.actionToProfileFragment)
+                        findNavController().popBackStack(R.id.editeInformationFragment, true)
+
 
                     }
                 }

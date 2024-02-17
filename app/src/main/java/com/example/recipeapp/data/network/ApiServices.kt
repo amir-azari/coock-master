@@ -6,11 +6,14 @@ import com.example.recipeapp.models.login.BodyLogin
 import com.example.recipeapp.models.login.ResponseLogin
 import com.example.recipeapp.models.lucky.ResponseLucky
 import com.example.recipeapp.models.profile.BodyEditeInfo
+import com.example.recipeapp.models.profile.BodyPassword
+import com.example.recipeapp.models.profile.ResponsChangePassword
 import com.example.recipeapp.models.profile.ResponseProfile
 import com.example.recipeapp.models.recipe.ResponseRecipes
 import com.example.recipeapp.models.register.BodyRegister
 import com.example.recipeapp.models.register.ResponseRegister
 import com.example.recipeapp.utils.Constants.API_KEY
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,6 +35,10 @@ interface ApiServices {
 
     @PUT("editeInfo/{username}")
     suspend fun editeUserInfo(@Path("username") username : String , @Body body: BodyEditeInfo): Response<ResponseProfile>
+
+    @PUT("changePass/{username}")
+    suspend fun changePassword(@Path("username") username : String , @Body body: BodyPassword): Response<ResponsChangePassword>
+
 
 
     // BASE_URL_API1 endpoints

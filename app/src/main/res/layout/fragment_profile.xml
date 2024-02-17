@@ -169,6 +169,7 @@
             </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
             <TextView
+                android:id="@+id/changePassBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_80mdp"
@@ -215,6 +216,7 @@
             </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
             <TextView
+                android:id="@+id/logiytBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_80mdp"
