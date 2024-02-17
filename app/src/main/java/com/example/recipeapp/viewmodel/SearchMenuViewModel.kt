@@ -63,4 +63,5 @@ class SearchMenuViewModel @Inject constructor(private val repository: SearchMenu
             "Descending",
         )
     }
+//    suspend fun  clear() = repository.clearMenuData()
 }

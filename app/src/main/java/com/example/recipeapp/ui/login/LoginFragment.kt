@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
             val registerSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     // Navigate to the registration screen
-                    findNavController().popBackStack(R.id.loginFragment, true)
+                    findNavController().popBackStack(R.id.registerFragment, true)
                     findNavController().navigate(R.id.actionToRegister)
                 }
             }
@@ -180,7 +180,7 @@ class LoginFragment : Fragment() {
                                 sessionManager.saveToken(data.username!!)
                             }
                             findNavController().popBackStack(R.id.registerFragment, true)
-                            findNavController().navigate(R.id.actionToRecipe)
+                            findNavController().navigate(LoginFragmentDirections.actionToRecipe())
 
                         }
 
@@ -191,6 +191,8 @@ class LoginFragment : Fragment() {
                 is NetworkRequest.Error -> {
                     binding.root.showSnackBar(response.message!!)
                 }
+
+                else -> {}
             }
         }
     }
@@ -205,6 +207,7 @@ class LoginFragment : Fragment() {
             else -> false
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

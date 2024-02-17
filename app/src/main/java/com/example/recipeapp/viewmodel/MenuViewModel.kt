@@ -141,4 +141,5 @@ class MenuViewModel @Inject constructor(private val repository: MenuRepository) 
             "Descending",
         )
     }
+
 }

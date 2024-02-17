@@ -8,10 +8,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipeapp.R
 import com.example.recipeapp.databinding.ActivityMainBinding
+import com.example.recipeapp.ui.login.LoginFragment
+import com.example.recipeapp.ui.register.RegisterFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.loginFragment -> visibilityBottomMenu(false)
                 R.id.profileFragment -> visibilityBottomMenu(false)
                 R.id.editeInformationFragment -> visibilityBottomMenu(false)
+                R.id.changePasswordFragment -> visibilityBottomMenu(false)
                 else -> visibilityBottomMenu(true)
 
             }
@@ -87,6 +91,20 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+//    override fun onBackPressed() {
+//        val currentFragmentId = navHost.navController.currentDestination?.id
+//
+//        when (currentFragmentId) {
+//            R.id.registerFragment -> {
+//
+//                finish()
+//            }
+//
+//
+//            else -> super.onBackPressed()
+//        }
+//    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

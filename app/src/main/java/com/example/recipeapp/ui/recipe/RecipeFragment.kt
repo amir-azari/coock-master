@@ -78,6 +78,12 @@ class RecipeFragment : Fragment() {
     private var atuScrollIndex = 0
     private var token = ""
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launch{
+            token = sessionManager.getToken.first().toString()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

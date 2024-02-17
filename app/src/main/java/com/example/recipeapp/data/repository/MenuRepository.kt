@@ -43,7 +43,20 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
 
     private val Context.datastore: DataStore<Preferences> by preferencesDataStore(Constants.MENU_DATASTORE)
 
-    suspend fun saveMenuData(meal: String, mealId: Int, diet: String, dietId: Int , cuisine:String ,cuisineID:Int, sorting:String ,sortingID:Int , order:String ,orderID:Int , hour: Int, minute: Int ) {
+    suspend fun saveMenuData(
+        meal: String,
+        mealId: Int,
+        diet: String,
+        dietId: Int,
+        cuisine: String,
+        cuisineID: Int,
+        sorting: String,
+        sortingID: Int,
+        order: String,
+        orderID: Int,
+        hour: Int,
+        minute: Int
+    ) {
         context.datastore.edit {
             it[StoredKey.selectMealTitle] = meal
             it[StoredKey.selectMealId] = mealId
@@ -88,4 +101,5 @@ class MenuRepository @Inject constructor(@ApplicationContext private val context
                 selectOrder, selectOrderId, selectHour, selectMinute
             )
         }
+
 }

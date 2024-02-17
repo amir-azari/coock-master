@@ -1,12 +1,14 @@
 package com.example.recipeapp.data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.recipeapp.data.source.LocalDataSource
 import com.example.recipeapp.data.source.RemoteDataSource
 import com.example.recipeapp.models.profile.ProfileStoredModel
 import com.example.recipeapp.utils.Constants
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class ProfileRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val remote: RemoteDataSource
+    private val remote: RemoteDataSource,
+    private val local: LocalDataSource
 ) {
     //Api
     suspend fun getUserInfo(username: String) = remote.getUserInfo(username)
@@ -41,7 +44,7 @@ class ProfileRepository @Inject constructor(
         firstName: String,
         lastName: String,
 
-    ) {
+        ) {
         context.datastore.edit {
             it[StoredKey.username] = username
             it[StoredKey.firstName] = firstName
@@ -50,6 +53,7 @@ class ProfileRepository @Inject constructor(
 
         }
     }
+
     val readProfileData: Flow<ProfileStoredModel> = context.datastore.data
         .catch { e ->
             if (e is IOException) {
@@ -65,4 +69,8 @@ class ProfileRepository @Inject constructor(
 
             ProfileStoredModel(username, firstName, lastName)
         }
+
+
+
+
 }

@@ -88,4 +88,5 @@ class LuckyMenuViewModel @Inject constructor(private val repository: LuckyMenuRe
         )
     }
 
+
 }

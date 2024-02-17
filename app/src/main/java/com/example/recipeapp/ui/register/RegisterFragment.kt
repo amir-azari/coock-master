@@ -71,7 +71,8 @@ class RegisterFragment : Fragment() {
             // Create a ClickableSpan for the "Sing in" text
             val signInSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    findNavController().popBackStack(R.id.registerFragment, true)
+//                    findNavController().popBackStack(R.id.recipeFragment , true)
+//                    findNavController().popBackStack(R.id.loginFragment , true)
                     findNavController().navigate(R.id.actionToLogin)
                 }
             }
@@ -232,7 +233,6 @@ class RegisterFragment : Fragment() {
                 is NetworkRequest.Success -> {
                     response.data?.data?.let { data ->
 
-                        findNavController().popBackStack(R.id.registerFragment, true)
                         findNavController().navigate(R.id.actionToLogin)
                     }
                 }
@@ -240,6 +240,8 @@ class RegisterFragment : Fragment() {
                 is NetworkRequest.Error -> {
                     binding.root.showSnackBar(response.message!!)
                 }
+
+                else -> {}
             }
         }
     }

@@ -12,4 +12,5 @@ import com.example.recipeapp.data.database.entity.RecipeEntity
 @TypeConverters(RecipeAppTypeConverter::class)
 abstract class RecipeAppDatabase : RoomDatabase() {
     abstract fun dao(): RecipeAppDao
+
 }

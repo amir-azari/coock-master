@@ -36,7 +36,14 @@ class LuckyMenuRepository @Inject constructor(@ApplicationContext private val co
 
     private val Context.datastore: DataStore<Preferences> by preferencesDataStore(Constants.LUCKY_MENU_DATASTORE)
 
-    suspend fun saveMenuData(meal: String, mealId: Int, diet: String, dietId: Int , cuisine:String ,cuisineID:Int ) {
+    suspend fun saveMenuData(
+        meal: String,
+        mealId: Int,
+        diet: String,
+        dietId: Int,
+        cuisine: String,
+        cuisineID: Int
+    ) {
         context.datastore.edit {
             it[StoredKey.selectMealTitle] = meal
             it[StoredKey.selectMealId] = mealId

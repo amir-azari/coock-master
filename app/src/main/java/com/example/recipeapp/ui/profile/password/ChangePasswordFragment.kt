@@ -134,7 +134,6 @@ class ChangePasswordFragment : BottomSheetDialogFragment() {
 
                     findNavController().popBackStack(R.id.profileFragment, true)
                     findNavController().navigate(R.id.actionToProfileFragment)
-                    findNavController().popBackStack(R.id.changePasswordFragment, true)
 
 
 

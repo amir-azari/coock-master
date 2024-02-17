@@ -8,6 +8,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.recipeapp.data.database.entity.DetailEntity
 import com.example.recipeapp.data.database.entity.FavoriteEntity
 import com.example.recipeapp.data.database.entity.RecentRecipeEntity
@@ -55,6 +56,4 @@ interface RecipeAppDao {
 
     @Query("SELECT EXISTS (SELECT 1 FROM ${Constants.FAVORITE_TABLE_NAME} WHERE ID = :id)")
     fun existsFavorite(id: Int): Flow<Boolean>
-
-
 }

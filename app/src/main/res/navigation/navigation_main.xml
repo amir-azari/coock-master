@@ -23,9 +23,17 @@
         android:name="com.example.recipeapp.ui.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/actionToLogin"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <action
+
         android:id="@+id/actionToRecipe"
         app:destination="@id/recipeFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
@@ -48,7 +56,6 @@
     <action
         android:id="@+id/actionToProfileFragment"
         app:destination="@id/profileFragment"
-
         />
     <fragment
         android:id="@+id/searchFragment"
@@ -75,7 +82,8 @@
 
     <action
         android:id="@+id/actionToMenu"
-        app:destination="@id/menuFragment" />
+        app:destination="@id/menuFragment"
+        />
 
     <dialog
         android:id="@+id/menuFragment"
@@ -85,8 +93,7 @@
         <action
             android:id="@+id/actionMenuToRecipe"
             app:destination="@id/recipeFragment"
-            app:popUpTo="@id/recipeFragment"
-            app:popUpToInclusive="true" />
+ />
     </dialog>
 
     <action
@@ -144,13 +151,7 @@
         android:name="com.example.recipeapp.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
-    <action
-        android:id="@+id/actionToLogin"
-        app:destination="@id/loginFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <dialog
         android:id="@+id/searchMenuFragment"
         android:name="com.example.recipeapp.ui.menu.SearchMenuFragment"
@@ -160,8 +161,7 @@
         <action
             android:id="@+id/actionMenuToSearchFragment"
             app:destination="@id/searchFragment"
-            app:popUpTo="@id/searchFragment"
-            app:popUpToInclusive="true"
+
             />
     </dialog>
     <action
@@ -175,8 +175,7 @@
         <action
             android:id="@+id/actionMenuToLuckyFragment"
             app:destination="@id/luckyFragment"
-            app:popUpTo="@id/luckyFragment"
-            app:popUpToInclusive="true"
+
             />
     </dialog>
     <action
@@ -193,14 +192,12 @@
         <action
             android:id="@+id/actionProfileFragmentToEditeFragment"
             app:destination="@id/editeInformationFragment"
-            app:popUpTo="@id/editeInformationFragment"
-            app:popUpToInclusive="true"
+
             />
         <action
             android:id="@+id/actionProfileFragmentToChnagePasswordFragment"
             app:destination="@id/changePasswordFragment"
-            app:popUpTo="@id/changePasswordFragment"
-            app:popUpToInclusive="true"
+
             />
     </fragment>
     <dialog
