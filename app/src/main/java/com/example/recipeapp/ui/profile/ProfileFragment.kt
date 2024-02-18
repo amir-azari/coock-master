@@ -71,10 +71,13 @@ class ProfileFragment : Fragment() {
                 builder.setTitle("Log out")
                     .setMessage("Are you sure you can log out???")
                     .setPositiveButton("Yes") { _, _ ->
-                        findNavController().navigate(R.id.registerFragment)
+
+
                         lifecycleScope.launch {
                             sessionManager.logout()
                             sessionManager.clearToken()
+                            findNavController().popBackStack(R.id.profileFragment , true)
+                            findNavController().navigate(R.id.navigation_main)
                         }
                     }
                     .setNegativeButton("No") { dialog, _ ->
