@@ -123,7 +123,7 @@ class DetailFragment : Fragment() {
                     }
                     is NetworkRequest.Error -> {
                         loading.isVisible(false, contentLay)
-                        binding.root.showSnackBar(response.message!!)
+                        Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -285,7 +285,7 @@ class DetailFragment : Fragment() {
                     }
                     is NetworkRequest.Error -> {
                         similarList.hideShimmer()
-                        binding.root.showSnackBar(response.message!!)
+                        Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
                     }
                 }
             }

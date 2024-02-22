@@ -116,12 +116,14 @@ class RegisterFragment : Fragment() {
 
             // Click listener for the submit button
             submitBtn.setOnClickListener {
-                val firstName = nameEdt.text.toString()
-                val lastName = lastNameEdt.text.toString()
+                val firstName = nameEdt.text.toString().replaceFirstChar { it.uppercase() }
+                val lastName = lastNameEdt.text.toString().replaceFirstChar { it.uppercase() }
                 val username = usernameEdt.text.toString()
                 val password = passwordEdt.text.toString()
 
-                if (validateFields(firstName, lastName, username) &&
+
+
+                if (validateFields(firstName, lastName, username , password) &&
                     validateUsername(username) &&
                     validatePassword(password) &&
                     validateFirstName(firstName) &&
@@ -157,43 +159,67 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun validateFields(firstName: String, lastName: String, username: String): Boolean {
-        return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty()
+    private fun validateFields(firstName: String, lastName: String, username: String , password: String): Boolean {
+        return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()
     }
+
     private fun validateFirstName(firstName: String): Boolean {
-        val nameRegex = "^[^\\d@\$].*"
-        return if (firstName.isNotEmpty()) {
-            if (firstName.length >= 3 && firstName.matches(nameRegex.toRegex())) {
-                binding.nameTxtLay.isErrorEnabled = false
-                true
+        return if (firstName.length in 2..50) {
+                // Check for valid characters
+                if (firstName.matches("[a-zA-Z]+".toRegex())) {
+                    // Check for special characters
+                    if (!firstName.contains("@") && !firstName.contains("#") && !firstName.contains("$")) {
+                        // Check for spaces at the beginning or end
+                        if (!firstName.startsWith(" ") && !firstName.endsWith(" ")) {
+                            binding.nameTxtLay.isErrorEnabled = false
+                            true
+                        } else {
+                            binding.nameTxtLay.error = getString(R.string.firstNameSpacesAtStartEnd)
+                            false
+                        }
+                    } else {
+                        binding.nameTxtLay.error = getString(R.string.firstNameContainsSpecialChars)
+                        false
+                    }
+                } else {
+                    binding.nameTxtLay.error = getString(R.string.firstNameInvalidChars)
+                    false
+                }
             } else {
-                binding.nameTxtLay.error = getString(R.string.firstNameNotValid)
+                binding.nameTxtLay.error = getString(R.string.firstNameInvalidLength)
                 false
-            }
-        } else {
-            binding.nameTxtLay.isErrorEnabled = false
-            false
         }
     }
 
     private fun validateLastName(lastName: String): Boolean {
-        val nameRegex = "^[^\\d@\$].*"
-        return if (lastName.isNotEmpty()) {
-            if (lastName.length >= 3 && lastName.matches(nameRegex.toRegex())) {
-                binding.lastNameTxtLay.isErrorEnabled = false
-                true
+        return if (lastName.length in 2..50) {
+                if (lastName.matches("[a-zA-Z]+".toRegex())) {
+                    if (!lastName.contains("@") && !lastName.contains("#") && !lastName.contains("$")) {
+                        if (!lastName.startsWith(" ") && !lastName.endsWith(" ")) {
+
+                            binding.lastNameTxtLay.isErrorEnabled = false
+                            true
+                        } else {
+                            binding.lastNameTxtLay.error = getString(R.string.lastNameSpacesAtStartEnd)
+                            false
+                        }
+                    } else {
+                        binding.lastNameTxtLay.error = getString(R.string.lastNameContainsSpecialChars)
+                        false
+                    }
+                } else {
+                    binding.lastNameTxtLay.error = getString(R.string.lastNameInvalidChars)
+                    false
+                }
             } else {
-                binding.lastNameTxtLay.error = getString(R.string.lastNameNotValid)
+                binding.lastNameTxtLay.error = getString(R.string.lastNameInvalidLength)
                 false
             }
-        } else {
-            binding.lastNameTxtLay.isErrorEnabled = false
-            false
-        }
     }
 
+
     private fun validateUsername(username: String): Boolean {
-        return if (username.isNotEmpty()) {
+        return if (username.isNotEmpty() && !username.contains(" ")) {
             this.username = username
             if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
                 binding.usernameTxtLay.isErrorEnabled = false
@@ -203,10 +229,11 @@ class RegisterFragment : Fragment() {
                 false
             }
         } else {
-            binding.usernameTxtLay.isErrorEnabled = false
+            binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
             false
         }
     }
+
 
     private fun validatePassword(password: String): Boolean {
         return if (password.isNotEmpty()) {

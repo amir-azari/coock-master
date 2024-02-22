@@ -153,7 +153,7 @@ class RecipeFragment : Fragment() {
                     }
 
                     is NetworkRequest.Error -> {
-                        binding.root.showSnackBar(response.message!!)
+                        Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
                     }
 
                     else -> {}
@@ -198,7 +198,7 @@ class RecipeFragment : Fragment() {
 
                     is NetworkRequest.Error -> {
                         setupLoading(false, popularList)
-                        binding.root.showSnackBar(response.message!!)
+                        Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
                     }
 
                     else -> {}

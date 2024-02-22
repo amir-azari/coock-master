@@ -55,6 +55,19 @@
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
     <string name="security">Security</string>
+    <string name="usernameContainsSpace">Username cannot contain spaces.</string>
+    <string name="firstNameSpacesAtStartEnd">First name cannot start or end with a space.</string>
+    <string name="firstNameContainsSpecialChars">First name cannot contain special characters.</string>
+    <string name="firstNameInvalidChars">Invalid characters in first name.</string>
+    <string name="firstNameInvalidLength">First name should be between 2 and 50 characters.</string>
+    <string name="firstNameEmpty">First name cannot be empty.</string>
+    <string name="lastNameEmpty">Last name cannot be empty.</string>
+    <string name="lastNameInvalidLength">Last name should be between 2 and 50 characters.</string>
+    <string name="lastNameInvalidChars">Invalid characters in last name.</string>
+    <string name="lastNameContainsSpecialChars">Last name cannot contain special characters.</string>
+    <string name="lastNameSpacesAtStartEnd">Last name cannot start or end with a space.</string>
+    <string name="usernameEmpty">Username cannot be empty.</string>
+
 
 
 </resources>

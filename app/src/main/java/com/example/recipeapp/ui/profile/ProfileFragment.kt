@@ -95,16 +95,6 @@ class ProfileFragment : Fragment() {
         }
 
     }
-    private fun clearDatabase() {
-        val db = Room.databaseBuilder(
-            requireContext(),
-            RecipeAppDatabase::class.java, "recipe_app_database"
-        ).build()
-
-        // Clear all tables in the database
-        db.clearAllTables()
-        db.close()
-    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

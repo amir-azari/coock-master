@@ -67,7 +67,7 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
 
         binding.apply {
 
-            profileViewModel.readProfileStoredItems.asLiveData().onceObserve(viewLifecycleOwner){
+            profileViewModel.readProfileStoredItems.asLiveData().onceObserve(viewLifecycleOwner) {
                 oldUsername = it.username
                 usernameEdt.setText(it.username)
                 lastNameEdt.setText(it.lastname)
@@ -96,8 +96,8 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
             }
 
             submitBtn.setOnClickListener {
-                val firstName = nameEdt.text.toString()
-                val lastName = lastNameEdt.text.toString()
+                val firstName = nameEdt.text.toString().replaceFirstChar { it.uppercase() }
+                val lastName = lastNameEdt.text.toString().replaceFirstChar { it.uppercase() }
                 val username = usernameEdt.text.toString()
 
                 if (validateFields(firstName, lastName, username) &&
@@ -118,21 +118,24 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
                                     newUsername = username
                                     newLastname = lastName
                                     newFirstname = firstName
-                                    editeInfoViewModel.callRegisterApi(oldUsername,body)
+                                    editeInfoViewModel.callRegisterApi(oldUsername, body)
                                 } else {
                                     root.showSnackBar(getString(R.string.checkConnection))
                                 }
                             }
                         }
                     }
-                }else {
-                    Toast.makeText(requireContext() , R.string.fillRequiredFields , Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.fillRequiredFields,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
         loadData()
     }
-
 
 
     private fun loadData() {
@@ -144,8 +147,8 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
 
                 is NetworkRequest.Success -> {
                     response.data?.data?.let { data ->
-                        profileViewModel.saveToStore(newUsername , newFirstname , newLastname)
-                        lifecycleScope.launch{
+                        profileViewModel.saveToStore(newUsername, newFirstname, newLastname)
+                        lifecycleScope.launch {
 
                             sessionManager.saveToken(newUsername)
                         }
@@ -158,48 +161,73 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
 
                 is NetworkRequest.Error -> {
 
-                    Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
     private fun validateFields(firstName: String, lastName: String, username: String): Boolean {
         return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty()
     }
+
     private fun validateFirstName(firstName: String): Boolean {
-        val nameRegex = "^[^\\d@\$].*"
-        return if (firstName.isNotEmpty()) {
-            if (firstName.length >= 3 && firstName.matches(nameRegex.toRegex())) {
-                binding.nameTxtLay.isErrorEnabled = false
-                true
+        return if (firstName.length in 2..50) {
+            // Check for valid characters
+            if (firstName.matches("[a-zA-Z]+".toRegex())) {
+                // Check for special characters
+                if (!firstName.contains("@") && !firstName.contains("#") && !firstName.contains("$")) {
+                    // Check for spaces at the beginning or end
+                    if (!firstName.startsWith(" ") && !firstName.endsWith(" ")) {
+                        binding.nameTxtLay.isErrorEnabled = false
+                        true
+                    } else {
+                        binding.nameTxtLay.error = getString(R.string.firstNameSpacesAtStartEnd)
+                        false
+                    }
+                } else {
+                    binding.nameTxtLay.error = getString(R.string.firstNameContainsSpecialChars)
+                    false
+                }
             } else {
-                binding.nameTxtLay.error = getString(R.string.firstNameNotValid)
+                binding.nameTxtLay.error = getString(R.string.firstNameInvalidChars)
                 false
             }
         } else {
-            binding.nameTxtLay.isErrorEnabled = false
+            binding.nameTxtLay.error = getString(R.string.firstNameInvalidLength)
             false
         }
     }
 
     private fun validateLastName(lastName: String): Boolean {
-        val nameRegex = "^[^\\d@\$].*"
-        return if (lastName.isNotEmpty()) {
-            if (lastName.length >= 3 && lastName.matches(nameRegex.toRegex())) {
-                binding.lastNameTxtLay.isErrorEnabled = false
-                true
+        return if (lastName.length in 2..50) {
+            if (lastName.matches("[a-zA-Z]+".toRegex())) {
+                if (!lastName.contains("@") && !lastName.contains("#") && !lastName.contains("$")) {
+                    if (!lastName.startsWith(" ") && !lastName.endsWith(" ")) {
+
+                        binding.lastNameTxtLay.isErrorEnabled = false
+                        true
+                    } else {
+                        binding.lastNameTxtLay.error = getString(R.string.lastNameSpacesAtStartEnd)
+                        false
+                    }
+                } else {
+                    binding.lastNameTxtLay.error = getString(R.string.lastNameContainsSpecialChars)
+                    false
+                }
             } else {
-                binding.lastNameTxtLay.error = getString(R.string.lastNameNotValid)
+                binding.lastNameTxtLay.error = getString(R.string.lastNameInvalidChars)
                 false
             }
         } else {
-            binding.lastNameTxtLay.isErrorEnabled = false
+            binding.lastNameTxtLay.error = getString(R.string.lastNameInvalidLength)
             false
         }
     }
 
+
     private fun validateUsername(username: String): Boolean {
-        return if (username.isNotEmpty()) {
+        return if (username.isNotEmpty() && !username.contains(" ")) {
             if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
                 binding.usernameTxtLay.isErrorEnabled = false
                 true
@@ -208,10 +236,12 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
                 false
             }
         } else {
-            binding.usernameTxtLay.isErrorEnabled = false
+            binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
             false
         }
     }
+
+
     private fun handleEditorAction(actionId: Int, nextField: View): Boolean {
         return when (actionId) {
             EditorInfo.IME_ACTION_NEXT -> {
@@ -222,6 +252,7 @@ class EditeInformationFragment : BottomSheetDialogFragment() {
             else -> false
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

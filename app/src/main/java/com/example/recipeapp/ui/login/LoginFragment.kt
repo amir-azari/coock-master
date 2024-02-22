@@ -137,7 +137,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun validateUsername(username: String): Boolean {
-        return if (username.isNotEmpty()) {
+        return if (username.isNotEmpty() && !username.contains(" ")) {
             this.username = username
             if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
                 binding.usernameTxtLay.isErrorEnabled = false
@@ -147,7 +147,7 @@ class LoginFragment : Fragment() {
                 false
             }
         } else {
-            binding.usernameTxtLay.isErrorEnabled = false
+            binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
             false
         }
     }

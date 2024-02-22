@@ -116,7 +116,7 @@ class LuckyFragment : Fragment() {
 
                     is NetworkRequest.Error -> {
                         loading.isVisible(false, contentLay)
-                        binding.root.showSnackBar(response.message!!)
+                        Toast.makeText(requireContext() , response.message , Toast.LENGTH_SHORT).show()
                     }
                 }
             }

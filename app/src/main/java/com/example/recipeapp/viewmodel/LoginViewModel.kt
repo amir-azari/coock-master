@@ -25,7 +25,7 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         loginData.value = NetworkRequest.Loading()
 
         val response = repository.postRegister(body)
-        loginData.value = NetworkResponse(response).generalNetworkResponse()
+        loginData.value = NetworkResponse(response).loginNetworkResponse()
 
     }
 
