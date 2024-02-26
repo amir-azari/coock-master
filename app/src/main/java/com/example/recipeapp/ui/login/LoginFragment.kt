@@ -137,17 +137,22 @@ class LoginFragment : Fragment() {
     }
 
     private fun validateUsername(username: String): Boolean {
-        return if (username.isNotEmpty() && !username.contains(" ")) {
-            this.username = username
-            if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
-                binding.usernameTxtLay.isErrorEnabled = false
-                true
+        return if (username.isNotEmpty()){
+            if (username.isNotEmpty() && !username.contains(" ")) {
+                this.username = username
+                if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
+                    binding.usernameTxtLay.isErrorEnabled = false
+                    true
+                } else {
+                    binding.usernameTxtLay.error = getString(R.string.usernameNotValid)
+                    false
+                }
             } else {
-                binding.usernameTxtLay.error = getString(R.string.usernameNotValid)
+                binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
                 false
             }
-        } else {
-            binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
+        }else {
+            binding.usernameTxtLay.isErrorEnabled = false
             false
         }
     }

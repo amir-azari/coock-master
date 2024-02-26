@@ -71,22 +71,19 @@ class RegisterFragment : Fragment() {
             // Create a ClickableSpan for the "Sing in" text
             val signInSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-//                    findNavController().popBackStack(R.id.recipeFragment , true)
-//                    findNavController().popBackStack(R.id.loginFragment , true)
                     findNavController().navigate(R.id.actionToLogin)
                 }
             }
 
             // Set up a SpannableString for the TextView
             val spannable = SpannableString(getString(R.string.already_a_member_sing_in))
-            spannable[spannable.length - "Login".length until spannable.length+1] = signInSpan
+            spannable[spannable.length - "Login".length until spannable.length + 1] = signInSpan
 
             // Set the SpannableString to the TextView
             SinInBtn.text = spannable
             SinInBtn.movementMethod = LinkMovementMethod.getInstance()
 
             // Set up text watchers
-
             usernameEdt.doAfterTextChanged { validateUsername(it.toString()) }
             passwordEdt.doAfterTextChanged { validatePassword(it.toString()) }
             nameEdt.doAfterTextChanged { validateFirstName(it.toString()) }
@@ -121,50 +118,61 @@ class RegisterFragment : Fragment() {
                 val username = usernameEdt.text.toString()
                 val password = passwordEdt.text.toString()
 
+                // Check if fields are not empty
+                if (firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
+                    // Validate individual fields only if they are not empty
+                    if (validateUsername(username) &&
+                        validatePassword(password) &&
+                        validateFirstName(firstName) &&
+                        validateLastName(lastName)
+                    ) {
+                        // Set up the body for the API call
+                        body.password = password
+                        body.firstName = firstName
+                        body.lastName = lastName
+                        body.username = username
 
-
-                if (validateFields(firstName, lastName, username , password) &&
-                    validateUsername(username) &&
-                    validatePassword(password) &&
-                    validateFirstName(firstName) &&
-                    validateLastName(lastName)
-                ) {
-                    // Set up the body for the API call
-                    body.password = password
-                    body.firstName = firstName
-                    body.lastName = lastName
-                    body.username = username
-
-                    // Check network connectivity
-                    lifecycleScope.launch {
-                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            networkChecker.checkNetworkAvailability().collect { state ->
-                                if (state) {
-                                    // Call the API
-                                    viewModel.callRegisterApi(body)
-                                } else {
-                                    root.showSnackBar(getString(R.string.checkConnection))
+                        // Check network connectivity
+                        lifecycleScope.launch {
+                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                networkChecker.checkNetworkAvailability().collect { state ->
+                                    if (state) {
+                                        // Call the API
+                                        viewModel.callRegisterApi(body)
+                                    } else {
+                                        root.showSnackBar(getString(R.string.checkConnection))
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        // Show an error if any field validation fails
+                        root.showSnackBar(getString(R.string.fillRequiredFields))
                     }
-
                 } else {
+                    // Show an error if any field is empty
                     root.showSnackBar(getString(R.string.fillRequiredFields))
                 }
             }
+
 
             // Load register data
             loadRegisterData()
         }
     }
 
-    private fun validateFields(firstName: String, lastName: String, username: String , password: String): Boolean {
+    private fun validateFields(
+        firstName: String,
+        lastName: String,
+        username: String,
+        password: String
+    ): Boolean {
         return firstName.isNotEmpty() && lastName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()
     }
 
     private fun validateFirstName(firstName: String): Boolean {
-        return if (firstName.length in 2..50) {
+        return if (firstName.isNotEmpty()){
+            if (firstName.length in 2..50) {
                 // Check for valid characters
                 if (firstName.matches("[a-zA-Z]+".toRegex())) {
                     // Check for special characters
@@ -188,11 +196,16 @@ class RegisterFragment : Fragment() {
             } else {
                 binding.nameTxtLay.error = getString(R.string.firstNameInvalidLength)
                 false
+            }
+        }else{
+            binding.nameTxtLay.isErrorEnabled = false
+            false
         }
     }
 
     private fun validateLastName(lastName: String): Boolean {
-        return if (lastName.length in 2..50) {
+        return if (lastName.isNotEmpty()) {
+            if (lastName.length in 2..50) {
                 if (lastName.matches("[a-zA-Z]+".toRegex())) {
                     if (!lastName.contains("@") && !lastName.contains("#") && !lastName.contains("$")) {
                         if (!lastName.startsWith(" ") && !lastName.endsWith(" ")) {
@@ -215,21 +228,31 @@ class RegisterFragment : Fragment() {
                 binding.lastNameTxtLay.error = getString(R.string.lastNameInvalidLength)
                 false
             }
+        }else{
+            binding.lastNameTxtLay.isErrorEnabled = false
+            false
+        }
+
+
     }
 
-
     private fun validateUsername(username: String): Boolean {
-        return if (username.isNotEmpty() && !username.contains(" ")) {
-            this.username = username
-            if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
-                binding.usernameTxtLay.isErrorEnabled = false
-                true
+        return if (username.isNotEmpty()){
+            if (username.isNotEmpty() && !username.contains(" ")) {
+                this.username = username
+                if (username.length in 4..24 && !username.matches("^[0-9@\$].*".toRegex())) {
+                    binding.usernameTxtLay.isErrorEnabled = false
+                    true
+                } else {
+                    binding.usernameTxtLay.error = getString(R.string.usernameNotValid)
+                    false
+                }
             } else {
-                binding.usernameTxtLay.error = getString(R.string.usernameNotValid)
+                binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
                 false
             }
-        } else {
-            binding.usernameTxtLay.error = getString(R.string.usernameContainsSpace)
+        }else {
+            binding.usernameTxtLay.isErrorEnabled = false
             false
         }
     }

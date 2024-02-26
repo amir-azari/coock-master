@@ -57,7 +57,6 @@ interface RecipeAppDao {
     @Query("SELECT EXISTS (SELECT 1 FROM ${Constants.FAVORITE_TABLE_NAME} WHERE ID = :id)")
     fun existsFavorite(id: Int): Flow<Boolean>
 
-
     //delete database
     @Query("DELETE FROM ${Constants.RECIPE_TABLE_NAME}")
     fun clearRecipeTable()
